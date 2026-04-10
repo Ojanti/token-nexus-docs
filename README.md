@@ -31,7 +31,7 @@ Output goes to `dist/`. Deployed automatically on push to `main`.
 
 ## Structure
 
-```
+```text
 src/
   components/   Astro UI components (Callout, CodeBlock, BeamDiagram, etc.)
   layouts/      DocsLayout - the three-column shell
@@ -47,4 +47,4 @@ To add a page: create the `.mdx` file, add it to the nav in `src/components/Side
 
 ---
 
-Built by [Ojanti](https://github.com/Ojanti)
+Built by [Itebujohn](https://www.linkedin.com/in/itebujohn/)
