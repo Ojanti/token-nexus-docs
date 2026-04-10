@@ -1,0 +1,86 @@
+﻿---
+layout: ../../layouts/DocsLayout.astro
+title: Auto-Match Scoring
+description: A detailed technical reference of the auto-match algorithm - how name similarity, value proximity, and type compatibility are computed and combined into a final confidence score.
+---
+
+import Callout from '../../components/Callout.astro';
+import ConfidenceMeter from '../../components/ConfidenceMeter.astro';
+import BeamDivider from '../../components/BeamDivider.astro';
+
+# Auto-Match Scoring
+
+This page documents the exact algorithm used to score candidate mappings during auto-match. It is intended as a reference for teams who want to understand why a particular pairing received the score it did, or who are debugging unexpected suggestions.
+
+## Score formula
+
+```
+score = (name_sim × 0.50) + (value_prox × 0.35) + (type_compat × 0.15)
+```
+
+All three components are normalized to the `[0, 1]` range before being combined. The result is a composite score in `[0, 1]`.
+
+## Name similarity (weight: 0.50)
+
+Both the token key path and the Figma variable name are normalized before comparison:
+
+1. Convert to lowercase
+2. Replace all delimiter characters (`.`, `/`, `-`, `_`) with a single space
+3. Trim leading and trailing whitespace
+4. Compute the Jaro-Winkler similarity between the two normalized strings
+
+Jaro-Winkler is chosen over simple edit distance because it gives extra weight to matching prefixes, which is important for hierarchical naming conventions where the category prefix (`color`, `spacing`) is the most semantically significant part of the name.
+
+## Value proximity (weight: 0.35)
+
+Value proximity computation depends on the token type:
+
+**Color tokens:** The CIELAB (L\*a\*b\*) color space distance between the two color values, normalized by the maximum possible CIELAB distance (~170). A distance of 0 (identical colors) gives a proximity of 1.0. Perceptually distinct colors score below 0.5.
+
+**Number tokens:** `1 - abs(a - b) / max(abs(a), abs(b), 1)`. Identical values give 1.0. Halved or doubled values give approximately 0.5.
+
+**String tokens:** Exact string match gives 1.0. Any mismatch gives 0.
+
+**Boolean tokens:** Exact boolean match gives 1.0. Mismatch gives 0.
+
+## Type compatibility (weight: 0.15)
+
+This component is a hard gate:
+
+- Compatible type pairing: `1.0`
+- Incompatible type pairing: `0.0` - and the entire composite score is also forced to `0.0` regardless of other components
+
+Type compatibility is checked before the other components are computed. An incompatible pairing is immediately scored 0 and excluded from results.
+
+## Threshold behavior
+
+<ConfidenceMeter />
+
+Scores below `0.38` are not presented. Scores between `0.38` and `0.75` appear as suggestions. Scores above `0.75` are pre-checked in the review panel.
+
+<Callout variant="note">
+  These thresholds are fixed in the current version. The scoring weights (0.50, 0.35, 0.15) are also fixed. Neither is configurable via the plugin UI. If you find the thresholds too aggressive or too lenient for your naming convention, please open a feedback issue on the repository.
+</Callout>
+
+## Sections
+
+## Why Jaro-Winkler over Levenshtein
+
+The reasoning behind choosing Jaro-Winkler for name similarity in a design token context, and the cases where Levenshtein would produce better results.
+
+## CIELAB vs. sRGB distance for color proximity
+
+Why perceptual color distance is used instead of simple RGB channel difference, and the edge cases where CIELAB distance can be misleading (highly saturated colors).
+
+## Performance at scale
+
+How the scoring is computed efficiently for files with hundreds of variables and thousands of tokens, including the pruning steps that eliminate obviously incompatible pairs before full scoring.
+
+<BeamDivider />
+
+<div class="next-section">
+  <p>Next</p>
+  <a href="/token-nexus-docs/reference/privacy-security" class="next-link">
+    Privacy & Security &rarr;
+  </a>
+</div>

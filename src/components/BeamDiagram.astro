@@ -1,0 +1,95 @@
+---
+// BeamDiagram.astro
+// Inline SVG diagram: GitHub tokens -> TokenNexus bridge -> Figma variables
+// Illustrates the core mapping model at a glance
+---
+
+<figure class="beam-diagram" aria-label="Diagram showing GitHub token files connected to Figma variables through TokenNexus">
+  <svg
+    viewBox="0 0 760 240"
+    xmlns="http://www.w3.org/2000/svg"
+    role="img"
+    style="width: 100%; height: auto;"
+  >
+    <defs>
+      <linearGradient id="beam-grad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#5B8EF5" />
+        <stop offset="50%" stop-color="#8B6BF5" />
+        <stop offset="100%" stop-color="#F572B6" />
+      </linearGradient>
+      <linearGradient id="arrow-grad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#5B8EF5" />
+        <stop offset="100%" stop-color="#8B6BF5" />
+      </linearGradient>
+      <linearGradient id="arrow-grad-2" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#8B6BF5" />
+        <stop offset="100%" stop-color="#F572B6" />
+      </linearGradient>
+      <marker id="arrowhead-1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <polygon points="0 0, 8 3, 0 6" fill="#8B6BF5" />
+      </marker>
+      <marker id="arrowhead-2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <polygon points="0 0, 8 3, 0 6" fill="#F572B6" />
+      </marker>
+    </defs>
+
+    <!-- GitHub panel -->
+    <rect x="8" y="16" width="220" height="208" rx="8" fill="#0D1220" stroke="#1B2440" stroke-width="1" />
+    <text x="24" y="44" font-family="Geist, system-ui, sans-serif" font-size="11" font-weight="600" fill="#404868" letter-spacing="0.1em" text-transform="uppercase">GITHUB</text>
+    <text x="24" y="44" font-family="Geist, system-ui, sans-serif" font-size="11" font-weight="600" fill="#404868" letter-spacing="1.2">GITHUB</text>
+
+    <!-- JSON token lines -->
+    <text x="24" y="72" font-family="'Geist Mono', monospace" font-size="11" fill="#5B8EF5">"color":</text>
+    <text x="24" y="90" font-family="'Geist Mono', monospace" font-size="11" fill="#8A90B4" x="24">  "brand":</text>
+    <text x="24" y="108" font-family="'Geist Mono', monospace" font-size="11" fill="#34D399">    "primary":</text>
+    <text x="24" y="126" font-family="'Geist Mono', monospace" font-size="10" fill="#8A90B4">      "$value": "#3B82F6"</text>
+    <text x="24" y="144" font-family="'Geist Mono', monospace" font-size="10" fill="#8A90B4">      "$type": "color"</text>
+    <text x="24" y="162" font-family="'Geist Mono', monospace" font-size="11" fill="#34D399">    "secondary":</text>
+    <text x="24" y="180" font-family="'Geist Mono', monospace" font-size="10" fill="#8A90B4">      "$value": "#8B5CF6"</text>
+    <text x="24" y="198" font-family="'Geist Mono', monospace" font-size="10" fill="#8A90B4">      "$type": "color"</text>
+
+    <!-- Arrow left to center -->
+    <line x1="234" y1="120" x2="290" y2="120" stroke="url(#arrow-grad)" stroke-width="1.5" marker-end="url(#arrowhead-1)" />
+
+    <!-- Center: TokenNexus bridge panel -->
+    <rect x="294" y="72" width="172" height="96" rx="8" fill="#131A2E" stroke="#1B2440" stroke-width="1" />
+
+    <!-- Logo SVG inside bridge -->
+    <text x="350" y="104" font-family="'Geist Mono', monospace" font-size="20" fill="#8A90B4" text-anchor="middle">{</text>
+    <line x1="328" y1="110" x2="420" y2="110" stroke="url(#beam-grad)" stroke-width="1.5" stroke-linecap="round" />
+    <text x="408" y="104" font-family="'Geist Mono', monospace" font-size="20" fill="#8A90B4" text-anchor="middle">}</text>
+
+    <text x="380" y="136" font-family="Geist, system-ui, sans-serif" font-size="11" font-weight="600" fill="#EEF0F8" text-anchor="middle">TokenNexus</text>
+    <text x="380" y="153" font-family="Geist, system-ui, sans-serif" font-size="10" fill="#404868" text-anchor="middle">mapping bridge</text>
+
+    <!-- Arrow center to right -->
+    <line x1="472" y1="120" x2="526" y2="120" stroke="url(#arrow-grad-2)" stroke-width="1.5" marker-end="url(#arrowhead-2)" />
+
+    <!-- Figma panel -->
+    <rect x="532" y="16" width="220" height="208" rx="8" fill="#0D1220" stroke="#1B2440" stroke-width="1" />
+    <text x="548" y="44" font-family="Geist, system-ui, sans-serif" font-size="11" font-weight="600" fill="#404868" letter-spacing="1.2">FIGMA</text>
+
+    <!-- Variable names -->
+    <text x="548" y="72" font-family="'Geist Mono', monospace" font-size="10" fill="#8A90B4">Variables</text>
+    <rect x="548" y="82" width="188" height="1" fill="#1B2440" />
+
+    <rect x="548" y="94" width="8" height="8" rx="2" fill="#3B82F6" />
+    <text x="562" y="103" font-family="'Geist Mono', monospace" font-size="11" fill="#EEF0F8">Color/Brand/Primary</text>
+
+    <rect x="548" y="114" width="8" height="8" rx="2" fill="#8B5CF6" />
+    <text x="562" y="123" font-family="'Geist Mono', monospace" font-size="11" fill="#EEF0F8">Color/Brand/Secondary</text>
+
+    <rect x="548" y="134" width="8" height="8" rx="2" fill="#1B2440" />
+    <text x="562" y="143" font-family="'Geist Mono', monospace" font-size="11" fill="#8A90B4">Color/Neutral/100</text>
+
+    <rect x="548" y="154" width="8" height="8" rx="2" fill="#1B2440" />
+    <text x="562" y="163" font-family="'Geist Mono', monospace" font-size="11" fill="#8A90B4">Color/Neutral/200</text>
+
+    <rect x="548" y="174" width="8" height="8" rx="2" fill="#F87171" />
+    <text x="562" y="183" font-family="'Geist Mono', monospace" font-size="11" fill="#EEF0F8">Color/Feedback/Error</text>
+  </svg>
+
+  <figcaption class="screenshot-caption">
+    TokenNexus maintains a named mapping between each Figma variable and its source design token.
+  </figcaption>
+</figure>

@@ -1,0 +1,50 @@
+﻿---
+layout: ../../layouts/DocsLayout.astro
+title: Export & Import
+description: How to export your token mapping as a JSON file for backup, sharing, or migration - and how to import a mapping into a new Figma file.
+---
+
+import Callout from '../../components/Callout.astro';
+import BeamDivider from '../../components/BeamDivider.astro';
+import ImagePlaceholder from '../../components/ImagePlaceholder.astro';
+
+# Export & Import
+
+TokenNexus can export your complete mapping configuration as a JSON file. This serves as a backup before major changes, a handoff artifact for teammates, and a migration tool when moving a design system to a new Figma file. Importing a mapping file restores the full variable-to-token mapping state, including mode bindings and repository settings.
+
+<ImagePlaceholder label="Screenshot: Export panel showing mapping JSON preview and download button" ratio="16/9" />
+
+## What the export contains
+
+The exported JSON includes the repository URL and branch, the list of selected token files, and every confirmed mapping record - each with the Figma variable ID, variable name, token file path, token key path, and any mode bindings. It does not include your GitHub PAT; you will need to re-enter that after importing into a new file.
+
+## When to export
+
+Export before making large mapping changes you might want to reverse. Export when handing a Figma file to a new team member. Export after completing initial mapping setup on a complex file - treat it as a snapshot of a known-good state.
+
+<Callout variant="tip">
+  If your team uses Figma's branching feature, export your mapping whenever you create a new Figma branch. The branch will have its own plugin storage, and importing the mapping means you do not need to re-map from scratch on every branch.
+</Callout>
+
+## Sections
+
+## Export format reference
+
+The full JSON schema for a TokenNexus mapping export, including field descriptions and what each field is used for during import.
+
+## Importing into a new file
+
+The step-by-step process for importing a mapping JSON file, including how variable ID resolution works when variables in the new file have different IDs than the originals.
+
+## Handling import conflicts
+
+What happens when the import file references variable IDs that do not exist in the current file, and how the conflict resolution panel helps you re-map them.
+
+<BeamDivider />
+
+<div class="next-section">
+  <p>Next</p>
+  <a href="/token-nexus-docs/advanced/team-collaboration" class="next-link">
+    Team Collaboration &rarr;
+  </a>
+</div>

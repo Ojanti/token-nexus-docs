@@ -1,0 +1,67 @@
+﻿---
+layout: ../layouts/DocsLayout.astro
+title: Quickstart
+description: Get TokenNexus connected to your GitHub repository and running your first sync in under five minutes.
+---
+
+import Callout from '../components/Callout.astro';
+import StepBlock from '../components/StepBlock.astro';
+import BeamDivider from '../components/BeamDivider.astro';
+import ImagePlaceholder from '../components/ImagePlaceholder.astro';
+
+# Quickstart
+
+If you already have a Figma file with local variables and a GitHub repository with token JSON files, this guide gets you from zero to your first successful sync in under five minutes. If you are missing either of those, start with the [Setup section](/token-nexus-docs/setup/connecting-repository).
+
+<ImagePlaceholder label="Screenshot: TokenNexus plugin freshly installed and open on the Setup screen" ratio="16/9" />
+
+<StepBlock number={1} title="Install the plugin">
+  Open your Figma file and go to **Plugins** → **Browse plugins in Community** → search "TokenNexus." Click "Install." The plugin will appear in your Figma plugin menu.
+</StepBlock>
+
+<StepBlock number={2} title="Connect your repository">
+  Open TokenNexus, paste your GitHub PAT, enter your repository in `owner/repo` format, confirm the branch, and click "Connect." A green badge confirms the connection.
+</StepBlock>
+
+<StepBlock number={3} title="Select your token files">
+  Browse the file tree and check the JSON files that contain your design token definitions. Click "Confirm selection."
+</StepBlock>
+
+<StepBlock number={4} title="Run Auto-Match">
+  In the Mapping tab, click "Run Auto-Match." Review the suggested pairings, accept the ones that look correct, and fix or manually create any that are wrong.
+</StepBlock>
+
+<StepBlock number={5} title="Save the mapping">
+  Click "Save mapping." The coverage summary will tell you how many variables are now mapped. You do not need 100% coverage to proceed.
+</StepBlock>
+
+<StepBlock number={6} title="Run your first sync">
+  Switch to the Sync tab and click "Fetch changes." The diff will show any differences between your current Figma variable values and your token file values. Review and click "Apply selected."
+</StepBlock>
+
+<Callout variant="note">
+  If this is your first sync, the diff may be long - it is comparing the current state of your Figma file against your token sources, which may never have been formally synced before. Take your time reviewing before applying.
+</Callout>
+
+## Sections
+
+## Verification
+
+How to confirm the sync applied correctly by checking a sample of variables in the Figma Variables panel.
+
+## What to do when Auto-Match misses variables
+
+A quick path to identifying unmapped variables and manually mapping the most important ones first.
+
+## Setting up a team sync cadence
+
+How to coordinate with your engineering team so TokenNexus syncs happen around token release events rather than ad hoc.
+
+<BeamDivider />
+
+<div class="next-section">
+  <p>Next</p>
+  <a href="/token-nexus-docs/concepts/tokens-variables-gap" class="next-link">
+    Understand the concepts &rarr;
+  </a>
+</div>

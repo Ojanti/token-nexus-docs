@@ -1,0 +1,93 @@
+---
+// OnPageTOC.astro
+// Right-rail table of contents with IntersectionObserver scroll tracking
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+const { headings } = Astro.props;
+
+// Only render if there are 2+ headings (h2 and h3 only)
+const filteredHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const shouldRender = filteredHeadings.length >= 2;
+---
+
+{shouldRender && (
+  <div class="toc-rail-inner">
+    <span class="toc-label">On this page</span>
+    <ul class="toc-list" id="toc-list">
+      {filteredHeadings.map((heading) => (
+        <li class={`toc-item toc-item--h${heading.depth}`}>
+          <a
+            href={`#${heading.slug}`}
+            class:list={['toc-link', { 'toc-link-h3': heading.depth === 3 }]}
+            data-toc-target={heading.slug}
+          >
+            {heading.text}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
+
+<script>
+  function initTOC() {
+    const tocLinks = document.querySelectorAll<HTMLAnchorElement>('[data-toc-target]');
+    if (!tocLinks.length) return;
+
+    const headingIds = Array.from(tocLinks).map((link) => link.dataset.tocTarget!);
+    const headingElements = headingIds
+      .map((id) => document.getElementById(id))
+      .filter(Boolean) as HTMLElement[];
+
+    if (!headingElements.length) return;
+
+    let activeId: string | null = null;
+
+    function setActive(id: string | null) {
+      if (id === activeId) return;
+      activeId = id;
+      tocLinks.forEach((link) => {
+        const isActive = link.dataset.tocTarget === id;
+        link.classList.toggle('active', isActive);
+      });
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Find topmost visible heading
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+
+        if (visible.length > 0) {
+          setActive(visible[0].target.id);
+        }
+      },
+      {
+        rootMargin: '-64px 0px -70% 0px',
+        threshold: 0,
+      }
+    );
+
+    headingElements.forEach((el) => observer.observe(el));
+
+    // Set first heading active by default
+    if (headingIds[0]) setActive(headingIds[0]);
+  }
+
+  // Run after DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTOC);
+  } else {
+    initTOC();
+  }
+</script>

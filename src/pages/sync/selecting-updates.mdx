@@ -1,0 +1,50 @@
+﻿---
+layout: ../../layouts/DocsLayout.astro
+title: Selecting Updates
+description: How to choose which pending changes to apply during a sync session - applying all, selecting a subset, or deferring specific updates for later.
+---
+
+import Callout from '../../components/Callout.astro';
+import BeamDivider from '../../components/BeamDivider.astro';
+import ImagePlaceholder from '../../components/ImagePlaceholder.astro';
+
+# Selecting Updates
+
+TokenNexus does not require you to apply all pending changes at once. Every diff row has a checkbox, and the Apply button only processes the checked rows. This lets you stage your sync - for example, applying color token updates immediately while holding spacing changes for after a design review.
+
+<ImagePlaceholder label="Screenshot: Diff panel with checkboxes and a subset of rows selected before applying" ratio="16/9" />
+
+## Default selection state
+
+All rows with a "Changed" status are checked by default. Warning rows are unchecked by default because they require investigation before it is safe to apply them. You can change any row's checked state before clicking Apply.
+
+## Applying a selection
+
+Click "Apply selected" to write the checked values to your Figma variables. The plugin processes each variable update sequentially using the Figma Plugin API. A progress indicator shows the current variable being written. When complete, a summary shows how many variables were updated successfully and how many failed.
+
+<Callout variant="note">
+  Deselected rows are not marked as "skipped" or "deferred" in any persistent state. If you re-open the sync panel without applying, the full diff will be recalculated from the current GitHub state. Changes you did not apply will reappear in the diff - they are not remembered as intentionally skipped.
+</Callout>
+
+## Sections
+
+## Applying by collection
+
+How to use the collection-level checkbox to select or deselect all variables in a given variable collection at once.
+
+## What happens when an apply partially fails
+
+If some variables fail to update - due to a Figma API error or a locked layer - how the plugin reports which updates succeeded and which need to be retried.
+
+## Applying the same diff twice
+
+Whether re-applying a diff after a partial failure is safe, and what protection exists against double-applying a change.
+
+<BeamDivider />
+
+<div class="next-section">
+  <p>Next</p>
+  <a href="/token-nexus-docs/sync/undo-strategy" class="next-link">
+    Undo Strategy &rarr;
+  </a>
+</div>

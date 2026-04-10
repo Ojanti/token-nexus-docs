@@ -1,0 +1,50 @@
+﻿---
+layout: ../../layouts/DocsLayout.astro
+title: Choosing Token Files
+description: How to select which JSON files in your repository contain the design tokens you want to map to Figma variables.
+---
+
+import Callout from '../../components/Callout.astro';
+import BeamDivider from '../../components/BeamDivider.astro';
+import ImagePlaceholder from '../../components/ImagePlaceholder.astro';
+
+# Choosing Token Files
+
+After connecting your repository, TokenNexus scans it for JSON files and presents a file tree for you to select from. You choose which files contain the tokens you want to map - this is not necessarily all JSON files in the repository, and it is common to select a subset.
+
+<ImagePlaceholder label="Screenshot: File tree panel showing JSON files with checkboxes for selection" ratio="16/9" />
+
+## How the file scan works
+
+TokenNexus reads the directory tree of your repository via the GitHub API and filters for files with a `.json` extension. It does not fetch the contents of any file until you select it. Files inside `node_modules`, `.git`, and other common non-token directories are excluded automatically.
+
+## Which files to select
+
+Select only the files that define your design tokens. A common pattern is a `tokens/` directory containing one file per category (`colors.json`, `spacing.json`, `typography.json`) or one file per theme (`light.json`, `dark.json`). Do not select build output files, configuration files, or files that import tokens rather than define them.
+
+<Callout variant="tip">
+  If you are unsure which files contain your raw token definitions, open them on GitHub first. A token definition file will contain nested objects with `$value` or `value` keys at the leaf nodes. Build output files often contain flattened structures with CSS variable names as keys.
+</Callout>
+
+## Sections
+
+## Multi-file token structures
+
+How to work with repositories that split tokens across many files or use a `$metadata` index file to declare which files are active.
+
+## Re-selecting files after initial setup
+
+How to add or remove token files from your selection after setup without invalidating your existing mapping.
+
+## Files that fail to parse
+
+What happens when a selected file contains syntax errors or an unrecognized format - and how to identify the file causing the problem.
+
+<BeamDivider />
+
+<div class="next-section">
+  <p>Next</p>
+  <a href="/token-nexus-docs/mapping/auto-match" class="next-link">
+    Auto-Match &rarr;
+  </a>
+</div>

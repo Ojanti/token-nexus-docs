@@ -1,0 +1,50 @@
+﻿---
+layout: ../../layouts/DocsLayout.astro
+title: Undo Strategy
+description: What options exist to reverse a sync that applied incorrect values, and how Figma's undo history interacts with plugin-applied variable changes.
+---
+
+import Callout from '../../components/Callout.astro';
+import BeamDivider from '../../components/BeamDivider.astro';
+import ImagePlaceholder from '../../components/ImagePlaceholder.astro';
+
+# Undo Strategy
+
+Figma's native undo stack includes plugin-applied variable changes. If you apply a sync and immediately realize something is wrong, pressing Cmd+Z (Mac) or Ctrl+Z (Windows) will undo the entire apply operation in a single step - restoring all updated variables to their pre-sync values.
+
+<ImagePlaceholder label="Screenshot: Figma undo history panel showing TokenNexus apply operation as a single undoable step" ratio="16/9" />
+
+## How undo works with plugin changes
+
+TokenNexus groups all variable writes from a single Apply action into one undo transaction. This means you do not need to undo each variable change individually - one Cmd+Z reverses the entire sync apply. This is by design and reflects how the Figma Plugin API batches write operations.
+
+## After closing the plugin
+
+Figma's undo history persists as long as the file is open, even after the plugin is closed. If you close the plugin but leave the file open, you can still undo a sync apply. Once you close the Figma file, the undo history for that session is cleared.
+
+<Callout variant="warning">
+  If you apply a sync, close the Figma file, and reopen it, undo is no longer available. Before applying a large sync, consider exporting your mapping as a backup. For a full recovery path when undo is not available, see the [Recovery Guide](/token-nexus-docs/troubleshooting/recovery).
+</Callout>
+
+## Sections
+
+## Verifying what was changed before undoing
+
+How to use the sync history log to see exactly which variables were modified, so you can verify whether undo is needed before using it.
+
+## Selective revert
+
+When you want to undo only some variable changes rather than all of them - and why the full-undo approach may be the safer starting point.
+
+## Recovering without undo
+
+What to do when undo is not available - the steps for manually restoring variable values using a mapping export and the last known token state.
+
+<BeamDivider />
+
+<div class="next-section">
+  <p>Next</p>
+  <a href="/token-nexus-docs/advanced/export-import" class="next-link">
+    Export & Import &rarr;
+  </a>
+</div>

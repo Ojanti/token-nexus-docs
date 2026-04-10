@@ -1,0 +1,54 @@
+﻿---
+layout: ../../layouts/DocsLayout.astro
+title: Mapping as a Contract
+description: A mapping is a deliberate, saved decision connecting a Figma variable to a design token. It persists across syncs so you only make each decision once.
+---
+
+import Callout from '../../components/Callout.astro';
+import BeamDivider from '../../components/BeamDivider.astro';
+import ImagePlaceholder from '../../components/ImagePlaceholder.astro';
+
+# Mapping as a Contract
+
+A mapping is a deliberate, saved decision: "this Figma variable corresponds to this design token." It is not a guess the plugin makes on each sync - it is a record you create once, stored with your file, consulted every time. When the token value changes in GitHub, the mapping tells TokenNexus exactly which Figma variable to update. No inference. No re-matching. No opportunity for drift.
+
+<ImagePlaceholder label="Screenshot: Mapping panel showing saved variable-to-token pairs" ratio="16/9" />
+
+## What a mapping record contains
+
+Every mapping entry stores four things: the Figma variable ID, the Figma variable name at the time of mapping (for display), the token file path, and the token key path within that file. The variable ID is the stable anchor - names can change on either side, and TokenNexus shows you a warning rather than silently guessing.
+
+## Why persistence matters
+
+Without a saved mapping, every sync session would require you to re-establish which variable corresponds to which token. That is the same manual labor every time, plus the ongoing risk of making a different decision than you made last time. A persisted mapping means the work you did during setup pays forward indefinitely.
+
+<Callout variant="tip">
+  Treat your mapping file as part of your design system's source of truth. If your team uses version control for Figma or shares plugin data, exporting and committing the mapping JSON means any team member can restore the full mapping state without re-doing the work from scratch.
+</Callout>
+
+## Sections
+
+## Mapping lifecycle
+
+How a mapping is created, updated when either side changes, and explicitly deleted when a variable or token is retired.
+
+## Mapping confidence vs. mapping commitment
+
+The distinction between an auto-match suggestion (a confidence score) and a confirmed mapping (a saved record) - and why the plugin treats these as separate states.
+
+## Partial mappings
+
+What happens when your Figma file has variables with no mapped token, or your token file has tokens that no variable is mapped to, and how to identify coverage gaps.
+
+## Mapping portability
+
+How to export the mapping as a JSON file, share it with collaborators, and re-import it in another Figma file or after a plugin reinstall.
+
+<BeamDivider />
+
+<div class="next-section">
+  <p>Next</p>
+  <a href="/token-nexus-docs/concepts/how-sync-works" class="next-link">
+    How Sync Works &rarr;
+  </a>
+</div>

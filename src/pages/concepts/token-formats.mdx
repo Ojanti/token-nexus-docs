@@ -1,0 +1,55 @@
+﻿---
+layout: ../../layouts/DocsLayout.astro
+title: Token Formats
+description: TokenNexus supports W3C Design Token Community Group format and Style Dictionary JSON. Understanding how these formats differ affects how your tokens are parsed and matched.
+---
+
+import Callout from '../../components/Callout.astro';
+import TypeBadge from '../../components/TypeBadge.astro';
+import BeamDivider from '../../components/BeamDivider.astro';
+import ImagePlaceholder from '../../components/ImagePlaceholder.astro';
+
+# Token Formats
+
+TokenNexus supports two JSON-based token formats: the W3C Design Token Community Group (DTCG) specification - identified by `$value` and `$type` keys - and the Style Dictionary flat-object format used by many legacy token pipelines. Understanding which format your repository uses affects how TokenNexus parses token files and how confidently it can match types.
+
+<ImagePlaceholder label="Screenshot: Token file selection panel showing detected format label" ratio="16/9" />
+
+## DTCG format (recommended)
+
+The DTCG format uses `$value` and `$type` as the standard keys for a token's value and type declaration. This explicit typing means TokenNexus can confirm type compatibility before suggesting a mapping - a <TypeBadge type="COLOR" /> token will only be suggested against a Figma color variable, and a <TypeBadge type="FLOAT" /> token will only be suggested against a number variable.
+
+## Style Dictionary format
+
+Style Dictionary uses `value` (without the `$` prefix) and may or may not include a `type` field. TokenNexus can parse this format, but without an explicit type declaration it must infer the type from the value itself - for example, a hex string like `#3B82F6` is inferred as a color. Inference is reliable for colors and numbers but less reliable for <TypeBadge type="STRING" /> and <TypeBadge type="BOOLEAN" /> tokens.
+
+<Callout variant="tip">
+  If you have the option, migrate your token files to the DTCG format. The `$type` field removes the inference step entirely and gives you the most reliable auto-matching results.
+</Callout>
+
+## Sections
+
+## Format detection
+
+How TokenNexus auto-detects the format of a token file when you select it, and how to override the detection if it is wrong.
+
+## Nested vs. flat token structures
+
+How both formats handle token hierarchy, and how deep nesting affects the token key paths stored in your mapping.
+
+## Alias and reference tokens
+
+How `{color.brand.primary}` reference syntax in DTCG, and `{color.brand.primary}` in Style Dictionary, are resolved - and whether TokenNexus follows aliases or maps the leaf value.
+
+## Unsupported fields
+
+Fields that TokenNexus reads but does not act on (`$description`, `$extensions`, `$deprecated`) and what happens when they are present.
+
+<BeamDivider />
+
+<div class="next-section">
+  <p>Next</p>
+  <a href="/token-nexus-docs/setup/connecting-repository" class="next-link">
+    Connecting Your Repository &rarr;
+  </a>
+</div>

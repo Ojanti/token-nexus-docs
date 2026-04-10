@@ -1,0 +1,63 @@
+﻿---
+layout: ../../layouts/DocsLayout.astro
+title: Connection Issues
+description: How to diagnose and resolve the most common reasons TokenNexus fails to connect to your GitHub repository.
+---
+
+import Callout from '../../components/Callout.astro';
+import BeamDivider from '../../components/BeamDivider.astro';
+import ImagePlaceholder from '../../components/ImagePlaceholder.astro';
+
+# Connection Issues
+
+Most connection failures come from one of three places: a wrong PAT scope, a typo in the repository path, or a PAT that has expired. Start with those three before investigating anything else. The connection error message in the plugin panel will usually tell you which category you are in.
+
+<ImagePlaceholder label="Screenshot: Connection error state in the setup panel with error message visible" ratio="16/9" />
+
+## "Authentication failed" or 401 error
+
+Your PAT is either invalid, expired, or does not have access to the specified repository. Verify the following:
+
+1. The PAT was copied in full - GitHub tokens are long and easy to truncate when copying
+2. The PAT has not expired - check your GitHub token settings page
+3. For organization repositories, the PAT has been authorized for SAML SSO if your organization requires it
+4. The PAT has `Contents: read` permission for the repository (fine-grained) or `repo` scope (classic)
+
+## "Repository not found" or 404 error
+
+The repository path was entered incorrectly, or the PAT does not have access to that repository. Verify:
+
+1. The path is in exactly `owner/repo` format, with no `https://github.com/` prefix and no trailing slash
+2. The repository exists and is not deleted or transferred to a new owner
+3. For private repositories, the PAT's repository access includes this specific repository
+
+<Callout variant="note">
+  GitHub returns a 404 (not found) rather than a 403 (forbidden) for private repositories that the PAT cannot access. This is intentional on GitHub's side - they do not confirm whether a private repository exists to an unauthenticated requester. If you are getting a 404 on a repository you know exists, treat it as a permissions issue first.
+</Callout>
+
+## "Branch not found" error
+
+The branch name you entered does not exist on the repository. Common causes: a branch was renamed from `master` to `main`, a feature branch was merged and deleted, or a simple typo. Verify the branch name by checking the repository on GitHub directly.
+
+## Sections
+
+## Network errors and timeouts
+
+Diagnosing connection failures that are not GitHub API errors - corporate firewalls, proxy configurations, and Figma's plugin network sandbox.
+
+## Rate limiting
+
+What happens when the GitHub API rate limit is hit and how to identify it from the error response.
+
+## PAT scopes for GitHub Enterprise
+
+Additional configuration required for GitHub Enterprise Server instances, including custom API base URL support.
+
+<BeamDivider />
+
+<div class="next-section">
+  <p>Next</p>
+  <a href="/token-nexus-docs/troubleshooting/no-files-found" class="next-link">
+    No Files Found &rarr;
+  </a>
+</div>

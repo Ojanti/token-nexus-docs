@@ -1,0 +1,20 @@
+---
+// StepBlock.astro
+// Ghost numeral + content layout for step-by-step sequences
+// No box, no card - pure spatial hierarchy via typography
+
+interface Props {
+  number: number | string;
+  title: string;
+}
+
+const { number, title } = Astro.props;
+---
+
+<div class="step-block">
+  <div class="step-block-number" aria-hidden="true">{number}</div>
+  <div class="step-block-content">
+    <div class="step-block-title">{title}</div>
+    <slot />
+  </div>
+</div>

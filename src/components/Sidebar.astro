@@ -1,0 +1,130 @@
+﻿---
+// Sidebar.astro
+// Fixed 248px navigation sidebar with section grouping and active link highlighting
+
+interface Props {
+  currentPath: string;
+}
+
+const { currentPath } = Astro.props;
+
+const base = '/token-nexus-docs';
+
+interface NavItem {
+  label: string;
+  href: string;
+}
+
+interface NavSection {
+  section: string;
+  items: NavItem[];
+}
+
+const navGroups: NavSection[] = [
+  {
+    section: 'START HERE',
+    items: [
+      { label: 'Introduction', href: `${base}/introduction` },
+      { label: 'Quickstart', href: `${base}/quickstart` },
+    ],
+  },
+  {
+    section: 'CONCEPTS',
+    items: [
+      { label: 'Tokens, Variables & the Gap', href: `${base}/concepts/tokens-variables-gap` },
+      { label: 'Mapping as a Contract', href: `${base}/concepts/mapping-as-contract` },
+      { label: 'How Sync Works', href: `${base}/concepts/how-sync-works` },
+      { label: 'Token Formats', href: `${base}/concepts/token-formats` },
+    ],
+  },
+  {
+    section: 'SETUP',
+    items: [
+      { label: 'Connecting Your Repository', href: `${base}/setup/connecting-repository` },
+      { label: 'Generating a GitHub PAT', href: `${base}/setup/github-pat` },
+      { label: 'Choosing Token Files', href: `${base}/setup/choosing-token-files` },
+    ],
+  },
+  {
+    section: 'MAPPING',
+    items: [
+      { label: 'Auto-Match', href: `${base}/mapping/auto-match` },
+      { label: 'When to Trust Auto-Match', href: `${base}/mapping/when-to-trust-auto-match` },
+      { label: 'Manual Mapping', href: `${base}/mapping/manual-mapping` },
+      { label: 'Mode Bindings', href: `${base}/mapping/mode-bindings` },
+      { label: 'Reviewing & Saving', href: `${base}/mapping/reviewing-saving` },
+    ],
+  },
+  {
+    section: 'SYNC',
+    items: [
+      { label: 'Reading a Diff', href: `${base}/sync/reading-a-diff` },
+      { label: 'Selecting Updates', href: `${base}/sync/selecting-updates` },
+      { label: 'Undo Strategy', href: `${base}/sync/undo-strategy` },
+    ],
+  },
+  {
+    section: 'ADVANCED',
+    items: [
+      { label: 'Export & Import', href: `${base}/advanced/export-import` },
+      { label: 'Team Collaboration', href: `${base}/advanced/team-collaboration` },
+    ],
+  },
+  {
+    section: 'TROUBLESHOOTING',
+    items: [
+      { label: 'Connection Issues', href: `${base}/troubleshooting/connection-issues` },
+      { label: 'No Files Found', href: `${base}/troubleshooting/no-files-found` },
+      { label: 'Parsing Errors', href: `${base}/troubleshooting/parsing-errors` },
+      { label: 'Diffs Look Wrong', href: `${base}/troubleshooting/diffs-look-wrong` },
+      { label: 'Sync Did Not Apply', href: `${base}/troubleshooting/sync-did-not-apply` },
+      { label: 'Recovery Guide', href: `${base}/troubleshooting/recovery` },
+    ],
+  },
+  {
+    section: 'REFERENCE',
+    items: [
+      { label: 'Value Type Compatibility', href: `${base}/reference/value-types` },
+      { label: 'Auto-Match Scoring', href: `${base}/reference/auto-match-scoring` },
+      { label: 'Privacy & Security', href: `${base}/reference/privacy-security` },
+    ],
+  },
+  {
+    section: 'RESOURCES',
+    items: [
+      { label: 'Resources', href: `${base}/resources` },
+    ],
+  },
+];
+
+function isActive(href: string, current: string): boolean {
+  // Normalize trailing slashes and compare
+  const normalizedHref = href.replace(/\/$/, '');
+  const normalizedCurrent = current.replace(/\/$/, '');
+  return normalizedCurrent === normalizedHref || normalizedCurrent.startsWith(normalizedHref + '/');
+}
+---
+
+<!-- Mobile overlay -->
+<div class="sidebar-overlay" id="sidebar-overlay" aria-hidden="true"></div>
+
+<nav class="sidebar" id="sidebar" aria-label="Documentation navigation">
+  {navGroups.map((group) => (
+    <div>
+      <span class="sidebar-section-label">{group.section}</span>
+      <ul class="sidebar-nav" role="list">
+        {group.items.map((item) => (
+          <li class="sidebar-nav-item">
+            <a
+              href={item.href}
+              class:list={['sidebar-nav-link', { active: isActive(item.href, currentPath) }]}
+              aria-current={isActive(item.href, currentPath) ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  ))}
+</nav>

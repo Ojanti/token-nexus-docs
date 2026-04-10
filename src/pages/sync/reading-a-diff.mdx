@@ -1,0 +1,57 @@
+﻿---
+layout: ../../layouts/DocsLayout.astro
+title: Reading a Diff
+description: How to interpret the TokenNexus sync diff panel - what each row represents, how values are displayed, and what the change type indicators mean.
+---
+
+import Callout from '../../components/Callout.astro';
+import TypeBadge from '../../components/TypeBadge.astro';
+import BeamDivider from '../../components/BeamDivider.astro';
+import ImagePlaceholder from '../../components/ImagePlaceholder.astro';
+
+# Reading a Diff
+
+The diff panel is the heart of the sync workflow. It shows you exactly what has changed in your token repository since your last sync - for every mapped variable. Each row represents one change: the variable that will be updated, the value it currently holds in Figma, and the value it will receive from the token file.
+
+<ImagePlaceholder label="Screenshot: Sync diff panel with annotated rows showing variable name, old value, new value, and change type badge" ratio="16/9" />
+
+## Anatomy of a diff row
+
+Each row in the diff panel contains: the Figma variable name, the token key path it is mapped to, a <TypeBadge type="COLOR" /> or <TypeBadge type="FLOAT" /> type badge, the current value (shown with a strikethrough), the incoming value, and a change-type label.
+
+**Changed** rows mean the token value has been updated in GitHub and the Figma variable holds the old value. This is the most common row type after a token update PR is merged.
+
+**Unchanged** rows are never shown. If a token and its corresponding variable already match, that pair is silently excluded from the diff.
+
+**Warning** rows indicate a mapping where the token value could not be read - the file may have been moved, the key may have been renamed, or the PAT may have insufficient access.
+
+## Color value display
+
+<TypeBadge type="COLOR" /> values are shown as both a hex string and a small color swatch. The swatch makes it easy to spot obvious errors - for example, a value that used to be a warm orange becoming a cold blue is immediately visible without reading the hex codes.
+
+<Callout variant="tip">
+  If the diff panel is empty after a successful fetch, it means all mapped variables already match their token sources. Nothing needs to be applied. This is a healthy state - it confirms your Figma file and your token repository are in sync.
+</Callout>
+
+## Sections
+
+## Filtering the diff
+
+How to filter rows by change type, by variable collection, or by token file - useful when a large token refactor produces a long diff that you want to work through in stages.
+
+## Understanding warning rows
+
+Common causes of warning rows and how to resolve each one without losing the mapping record.
+
+## Mode-specific diffs
+
+How the diff panel presents changes when a variable has multiple mode bindings, and how to read a row that shows different changes per mode.
+
+<BeamDivider />
+
+<div class="next-section">
+  <p>Next</p>
+  <a href="/token-nexus-docs/sync/selecting-updates" class="next-link">
+    Selecting Updates &rarr;
+  </a>
+</div>

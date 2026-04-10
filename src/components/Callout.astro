@@ -1,0 +1,27 @@
+---
+// Callout.astro
+// Styled callout block with variant-based left border and label
+
+type Variant = 'note' | 'tip' | 'warning' | 'why';
+
+interface Props {
+  variant: Variant;
+  title?: string;
+}
+
+const { variant, title } = Astro.props;
+
+const defaultLabels: Record<Variant, string> = {
+  note: 'NOTE',
+  tip: 'TIP',
+  warning: 'CAUTION',
+  why: 'WHY THIS MATTERS',
+};
+
+const label = title ?? defaultLabels[variant];
+---
+
+<div class={`callout callout--${variant}`} role="note">
+  <span class="callout-label">{label}</span>
+  <slot />
+</div>

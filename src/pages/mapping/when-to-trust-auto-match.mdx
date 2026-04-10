@@ -1,0 +1,51 @@
+﻿---
+layout: ../../layouts/DocsLayout.astro
+title: When to Trust Auto-Match
+description: Guidance on interpreting auto-match suggestions - when the confidence score is reliable, when to be skeptical, and when to map manually instead.
+---
+
+import Callout from '../../components/Callout.astro';
+import TypeBadge from '../../components/TypeBadge.astro';
+import BeamDivider from '../../components/BeamDivider.astro';
+import ImagePlaceholder from '../../components/ImagePlaceholder.astro';
+
+# When to Trust Auto-Match
+
+A high confidence score is not a guarantee. Auto-Match scores are most reliable when your naming conventions are consistent and your token values are unique. Understanding the scenarios where the algorithm excels - and where it can mislead - helps you review its suggestions efficiently.
+
+<ImagePlaceholder label="Screenshot: Auto-Match suggestion with score breakdown tooltip open" ratio="16/9" />
+
+## When auto-match is highly reliable
+
+Auto-match performs best when naming conventions on both sides are consistent and semantically equivalent - for example, a token file that uses `color.brand.primary` and a Figma variable named `Color/Brand/Primary`. It also performs well when token values are perceptually distinctive colors or very specific numerical values, because the value proximity component gives strong confirmation signal even when names are slightly off.
+
+## When to be more skeptical
+
+Be careful with suggestions where the name similarity is high but the value proximity is low - this pattern often indicates a naming collision where two different concepts happened to get similar names. Similarly, be skeptical of <TypeBadge type="FLOAT" /> token suggestions where the value is a common number like `16` or `1.0`, because many tokens and variables will have similar values purely by coincidence.
+
+<Callout variant="why">
+  Auto-match is an acceleration tool, not an authority. The goal is to reduce the number of decisions you have to make manually - not to remove your judgment from the loop. A five-second scan of each high-confidence suggestion is worth the time.
+</Callout>
+
+## Sections
+
+## Reading the score breakdown
+
+How to open the score detail tooltip for any suggestion to see the individual name, value, and type component scores rather than just the composite.
+
+## Naming convention mismatches
+
+Patterns that cause systematic false positives - for example, a token naming convention that uses categories in a different order than your Figma naming convention.
+
+## When to skip auto-match entirely
+
+If your naming conventions are highly divergent, running auto-match may produce enough noise that manual mapping is faster. This section describes how to identify that scenario.
+
+<BeamDivider />
+
+<div class="next-section">
+  <p>Next</p>
+  <a href="/token-nexus-docs/mapping/manual-mapping" class="next-link">
+    Manual Mapping &rarr;
+  </a>
+</div>

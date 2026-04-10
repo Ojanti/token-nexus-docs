@@ -1,0 +1,52 @@
+---
+// ConfidenceMeter.astro
+// Visual explanation of the auto-match confidence scoring system
+// Three zones: Not shown (0-0.38), Suggestion (0.38-0.75), Auto-applied (0.75-1.0)
+// Pure CSS/HTML, no JS needed
+---
+
+<div class="confidence-meter" role="img" aria-label="Auto-match confidence score zones diagram">
+  <div class="confidence-meter-track">
+    <div class="confidence-zone confidence-zone--none"></div>
+    <div class="confidence-zone confidence-zone--suggest"></div>
+    <div class="confidence-zone confidence-zone--apply"></div>
+  </div>
+
+  <div class="confidence-meter-thresholds">
+    <div class="confidence-threshold confidence-threshold--38">
+      <span>0.38</span>
+    </div>
+    <div class="confidence-threshold confidence-threshold--75">
+      <span>0.75</span>
+    </div>
+    <div class="confidence-threshold confidence-threshold--end">
+      <span>1.0</span>
+    </div>
+  </div>
+
+  <div class="confidence-meter-labels">
+    <div class="confidence-meter-label confidence-meter-label--none">
+      <strong>Not shown</strong><br />
+      Score below 0.38 - no suggestion made
+    </div>
+    <div class="confidence-meter-label confidence-meter-label--suggest">
+      <strong>Suggestion</strong><br />
+      Shown for review, not applied
+    </div>
+    <div class="confidence-meter-label confidence-meter-label--apply">
+      <strong>Auto-applied</strong><br />
+      High confidence, applied directly
+    </div>
+  </div>
+
+  <!-- Demo indicator showing an example position -->
+  <div class="confidence-indicator">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle cx="6" cy="6" r="5" fill="#8B6BF5" opacity="0.3" />
+      <circle cx="6" cy="6" r="3" fill="#8B6BF5" />
+    </svg>
+    <span class="confidence-indicator-text">
+      Example: score 0.62 - shown as suggestion, not auto-applied
+    </span>
+  </div>
+</div>

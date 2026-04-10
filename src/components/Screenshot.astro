@@ -1,0 +1,20 @@
+---
+// Screenshot.astro
+// Framed image with optional caption and annotation flag
+
+interface Props {
+  src: string;
+  alt: string;
+  caption?: string;
+  annotated?: boolean;
+}
+
+const { src, alt, caption, annotated = false } = Astro.props;
+---
+
+<figure class:list={['screenshot-wrapper', { 'screenshot-wrapper--annotated': annotated }]}>
+  <img src={src} alt={alt} loading="lazy" decoding="async" />
+  {caption && (
+    <figcaption class="screenshot-caption">{caption}</figcaption>
+  )}
+</figure>

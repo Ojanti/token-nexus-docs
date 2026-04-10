@@ -1,0 +1,48 @@
+---
+layout: ../layouts/DocsLayout.astro
+title: Resources
+description: External links, community resources, and further reading for TokenNexus users and design system teams.
+---
+
+import Callout from '../components/Callout.astro';
+import BeamDivider from '../components/BeamDivider.astro';
+
+# Resources
+
+A curated set of links for teams working with design tokens, Figma variables, and the broader design system tooling ecosystem.
+
+## Design token standards
+
+- [W3C Design Token Community Group](https://www.w3.org/community/design-tokens/) - The working group defining the DTCG token format that TokenNexus uses as its primary reference
+- [Design Tokens Format specification](https://design-tokens.github.io/community-group/format/) - The living specification document for `$value`, `$type`, and the full DTCG JSON format
+- [Tokens Studio](https://tokens.studio/) - A popular Figma plugin for managing tokens, often used upstream of TokenNexus in a token pipeline
+
+## Build tools
+
+- [Style Dictionary](https://amzn.github.io/style-dictionary/) - Amazon's token transformation tool, widely used to build platform-specific token outputs from a JSON source
+- [Theo](https://github.com/salesforce-ux/theo) - Salesforce's token build system, an alternative to Style Dictionary with different alias resolution behavior
+
+## Figma variables documentation
+
+- [Figma Variables overview](https://help.figma.com/hc/en-us/articles/15339657135383) - Official Figma documentation for local variables, collections, and modes
+- [Figma Plugin API: Variables](https://www.figma.com/plugin-docs/api/figma-variables/) - Developer reference for the Plugin API methods TokenNexus uses to read and write variable values
+
+## Community
+
+<Callout variant="tip">
+  The Design Tokens Slack community (`design-tokens.slack.com`) has active channels for both token format discussions and Figma-specific integration topics. It is the best place to find answers to questions that span both sides of the token pipeline.
+</Callout>
+
+## Sections
+
+## GitHub
+
+How to file issues, request features, and contribute to the TokenNexus plugin codebase.
+
+## Changelog
+
+A record of significant version changes, new features, and breaking changes in the plugin.
+
+## Acknowledgments
+
+The open-source libraries and tools that TokenNexus builds on.

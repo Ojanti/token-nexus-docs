@@ -1,0 +1,52 @@
+﻿---
+layout: ../../layouts/DocsLayout.astro
+title: Parsing Errors
+description: How to identify and resolve token file parsing failures - JSON syntax errors, unexpected file structures, and encoding issues.
+---
+
+import Callout from '../../components/Callout.astro';
+import BeamDivider from '../../components/BeamDivider.astro';
+import ImagePlaceholder from '../../components/ImagePlaceholder.astro';
+
+# Parsing Errors
+
+Parsing errors occur when TokenNexus fetches a token file successfully but cannot interpret its contents - either because of a JSON syntax error, an unexpected file structure, or a file that is not actually a token file despite having a `.json` extension. The error panel will show you the file name and, where possible, the line number where parsing failed.
+
+<ImagePlaceholder label="Screenshot: Parsing error panel showing affected file name and error description" ratio="16/9" />
+
+## JSON syntax errors
+
+The most common cause is a trailing comma in an object or array (valid in some editors but not in standard JSON), an unquoted key, or a comment left in a file that was originally JSON-with-comments. The error message will reference the character position of the syntax problem.
+
+To resolve: open the file on GitHub, check the line indicated in the error, and fix the syntax issue. If your workflow intentionally uses `.jsonc` (JSON with comments), ensure your build process produces a plain `.json` output and point TokenNexus at that file.
+
+## Unrecognized file structure
+
+If the JSON is valid but the file contains no token-shaped objects - for example, a `package.json` or a Figma plugin manifest - TokenNexus will parse it but report zero tokens found. This is not technically an error, but it means the file is not useful for mapping.
+
+<Callout variant="warning">
+  If a file that previously worked begins failing to parse after a repository update, it is likely that a recent commit introduced a syntax error. Check the repository's recent commit history for changes to the affected file before spending time debugging the plugin.
+</Callout>
+
+## Sections
+
+## Reading the error position
+
+How to interpret the character offset or line number in a parse error to find the exact location of the problem in the file.
+
+## Encoding issues
+
+What happens when a token file is saved in a non-UTF-8 encoding and how to confirm and fix the file encoding.
+
+## Partially valid files
+
+Whether TokenNexus can use a partially valid file - for example, a file where one section is malformed but the rest is valid JSON - and what to expect when it cannot.
+
+<BeamDivider />
+
+<div class="next-section">
+  <p>Next</p>
+  <a href="/token-nexus-docs/troubleshooting/diffs-look-wrong" class="next-link">
+    Diffs Look Wrong &rarr;
+  </a>
+</div>

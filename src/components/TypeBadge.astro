@@ -1,0 +1,14 @@
+---
+// TypeBadge.astro
+// Inline pill for Figma variable value types
+
+type TokenType = 'COLOR' | 'FLOAT' | 'STRING' | 'BOOLEAN';
+
+interface Props {
+  type: TokenType;
+}
+
+const { type } = Astro.props;
+---
+
+<span class={`type-badge type-badge--${type}`}>{type}</span>

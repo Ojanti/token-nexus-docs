@@ -1,0 +1,65 @@
+﻿---
+layout: ../../layouts/DocsLayout.astro
+title: Recovery Guide
+description: How to restore your Figma variables to a known-good state after an incorrect sync, a mapping error, or data loss in the plugin storage.
+---
+
+import Callout from '../../components/Callout.astro';
+import StepBlock from '../../components/StepBlock.astro';
+import BeamDivider from '../../components/BeamDivider.astro';
+import ImagePlaceholder from '../../components/ImagePlaceholder.astro';
+
+# Recovery Guide
+
+This guide covers the recovery paths available after something goes wrong. The options available to you depend on how much time has passed since the problem occurred and whether you have a mapping export on hand. Start with the fastest option and work down.
+
+<ImagePlaceholder label="Screenshot: TokenNexus reset panel with mapping export and clear storage options" ratio="16/9" />
+
+## Option 1 - Undo (best, if file is still open)
+
+If the Figma file is still open and you have not closed it since the incorrect sync, press Cmd+Z (Mac) or Ctrl+Z (Windows). TokenNexus groups all writes from a single Apply into one undo transaction, so a single undo reverses the entire sync. Verify that the variables are back to their expected values before proceeding.
+
+## Option 2 - Restore from a mapping export and known token state
+
+<StepBlock number={1} title="Identify the last known good token state">
+  Find the commit or release tag in your token repository that corresponds to the state your Figma variables should reflect. Note the token values for every affected variable.
+</StepBlock>
+
+<StepBlock number={2} title="Temporarily point to that commit">
+  In the TokenNexus Setup panel, change the branch or enter the specific commit SHA as your branch (GitHub supports this). This lets you sync from the historical token state.
+</StepBlock>
+
+<StepBlock number={3} title="Run sync from the historical state">
+  Review the diff - it should show all the incorrect values as "old" and the correct values as "new." Apply to restore.
+</StepBlock>
+
+<StepBlock number={4} title="Restore the branch to main">
+  Change the branch back to `main` (or your default branch) and re-run the diff to confirm the restored state.
+</StepBlock>
+
+<Callout variant="note">
+  If you do not have a mapping export and undo is not available, the manual recovery path requires you to know the correct values for each affected variable. The sync history log - if the plugin is still connected - shows the before and after values for the most recent session, which you can use as a reference.
+</Callout>
+
+## Option 3 - Clear plugin storage and re-map
+
+If the plugin storage itself is corrupted or the mapping cannot be read, use the "Clear plugin data" option in the Settings panel. This erases all TokenNexus data for the file - mapping, repository settings, and PAT reference. You will need to re-enter your connection details and re-create your mapping from scratch.
+
+## Sections
+
+## What "clear plugin data" removes
+
+The exact scope of the clear operation - what is erased and what is preserved (variable values in Figma are never deleted by this action).
+
+## Recovering a deleted mapping
+
+If a team member accidentally cleared the plugin data, how importing a previously exported mapping file restores the full state.
+
+<BeamDivider />
+
+<div class="next-section">
+  <p>Next</p>
+  <a href="/token-nexus-docs/reference/value-types" class="next-link">
+    Reference: Value Type Compatibility &rarr;
+  </a>
+</div>

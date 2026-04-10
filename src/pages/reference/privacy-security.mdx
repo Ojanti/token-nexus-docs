@@ -1,0 +1,62 @@
+﻿---
+layout: ../../layouts/DocsLayout.astro
+title: Privacy & Security
+description: How TokenNexus handles your GitHub credentials and design data - what is stored, where it is stored, and what never leaves your browser.
+---
+
+import Callout from '../../components/Callout.astro';
+import BeamDivider from '../../components/BeamDivider.astro';
+
+# Privacy & Security
+
+TokenNexus is a local-first plugin. It has no backend server, no analytics, and no account system. Your GitHub Personal Access Token is stored exclusively in Figma's user-scoped plugin storage on your local machine. Your design token data is fetched directly from GitHub to your browser. Nothing passes through a third-party server.
+
+## What is stored and where
+
+| Data | Storage location | Scope | Encrypted |
+|------|-----------------|-------|-----------|
+| GitHub PAT | Figma user plugin storage | Per user, per Figma account | Yes (Figma's storage is encrypted at rest) |
+| Repository URL and branch | Figma file plugin storage | Shared with file editors | No |
+| Selected token files | Figma file plugin storage | Shared with file editors | No |
+| Mapping records | Figma file plugin storage | Shared with file editors | No |
+| Token file contents | In-memory only | Session only, not persisted | N/A |
+| Sync history | Figma file plugin storage | Shared with file editors | No |
+
+## What leaves your machine
+
+The only outbound network requests TokenNexus makes are to `api.github.com` (or your GitHub Enterprise Server host). These requests use your PAT as a Bearer token in the Authorization header, and they fetch only the files you have explicitly selected.
+
+<Callout variant="note">
+  Figma's plugin sandbox restricts network access. TokenNexus cannot make requests to any domain other than those explicitly listed in its `networkAccess` manifest entry. This is enforced by Figma at the platform level and cannot be bypassed by the plugin code.
+</Callout>
+
+## Your PAT and least-privilege access
+
+TokenNexus only needs read access to your repository. A fine-grained PAT with `Contents: read` on a single repository is the minimum viable configuration. We strongly recommend not granting more access than this.
+
+## Sections
+
+## Figma plugin storage security model
+
+How Figma's plugin storage API works, the difference between user-scoped and file-scoped storage, and what would need to happen for stored data to be accessible to a malicious actor.
+
+## Network request details
+
+The exact API endpoints TokenNexus calls, the HTTP methods used, and what data is included in each request.
+
+## Reporting a security issue
+
+How to responsibly disclose a security vulnerability in TokenNexus.
+
+## Data deletion
+
+How to completely remove all TokenNexus data from a Figma file, including the nuclear option of removing the plugin from all files.
+
+<BeamDivider />
+
+<div class="next-section">
+  <p>Next</p>
+  <a href="/token-nexus-docs/resources" class="next-link">
+    Resources &rarr;
+  </a>
+</div>

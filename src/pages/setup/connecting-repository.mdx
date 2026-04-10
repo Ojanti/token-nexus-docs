@@ -1,0 +1,63 @@
+﻿---
+layout: ../../layouts/DocsLayout.astro
+title: Connecting Your Repository
+description: How to connect TokenNexus to a GitHub repository containing your design token files.
+---
+
+import Callout from '../../components/Callout.astro';
+import StepBlock from '../../components/StepBlock.astro';
+import BeamDivider from '../../components/BeamDivider.astro';
+import ImagePlaceholder from '../../components/ImagePlaceholder.astro';
+
+# Connecting Your Repository
+
+Connecting TokenNexus to your GitHub repository takes about two minutes. You provide three things: your Personal Access Token, the repository path in `owner/repo` format, and the branch you want to read from. TokenNexus verifies the connection before letting you proceed.
+
+<ImagePlaceholder label="Screenshot: Repository connection form with PAT field, repo path, and branch inputs" ratio="16/9" />
+
+<StepBlock number={1} title="Open the plugin">
+  Launch TokenNexus from the Figma plugin menu. On first run, the plugin opens directly to the Setup screen. On subsequent runs, access Setup from the gear icon in the top-right of the plugin panel.
+</StepBlock>
+
+<StepBlock number={2} title="Enter your GitHub PAT">
+  Paste your Personal Access Token into the PAT field. The token is stored in Figma's plugin storage for this file and is never transmitted to any server other than the GitHub API. If you do not have a PAT yet, see [Generating a GitHub PAT](/token-nexus-docs/setup/github-pat).
+</StepBlock>
+
+<StepBlock number={3} title="Enter the repository path">
+  Type the repository path in `owner/repo` format - for example, `acme-corp/design-tokens`. Do not include `https://github.com/` or a trailing slash.
+</StepBlock>
+
+<StepBlock number={4} title="Specify the branch">
+  Enter the branch name you want to read from. This defaults to `main`. You can change it at any time from the Setup panel without losing your mapping.
+</StepBlock>
+
+<StepBlock number={5} title="Verify the connection">
+  Click "Connect." TokenNexus will make a test API call to confirm the PAT has read access to the repository. A green confirmation badge means you are ready to proceed to file selection.
+</StepBlock>
+
+<Callout variant="note">
+  TokenNexus only reads from the branch you specify. Switching branches does not delete your mapping, but any token paths that do not exist on the new branch will show as unresolvable in the next sync.
+</Callout>
+
+## Sections
+
+## Changing repositories
+
+How to disconnect from one repository and connect to a different one without losing your variable mapping.
+
+## Organization repositories and SSO
+
+Additional steps required when your PAT needs to be authorized for a GitHub organization that uses SAML single sign-on.
+
+## Private vs. public repositories
+
+TokenNexus works with both. The only difference is that public repositories can be accessed with a PAT that has no special scopes, while private repositories require `repo` read access.
+
+<BeamDivider />
+
+<div class="next-section">
+  <p>Next</p>
+  <a href="/token-nexus-docs/setup/github-pat" class="next-link">
+    Generating a GitHub PAT &rarr;
+  </a>
+</div>

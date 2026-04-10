@@ -1,0 +1,25 @@
+---
+// ImagePlaceholder.astro
+// Dashed placeholder box for screenshots not yet captured
+
+interface Props {
+  label: string;
+  ratio?: string;
+  height?: number;
+}
+
+const { label, ratio = '16/9', height } = Astro.props;
+
+const style = height
+  ? `height: ${height}px; aspect-ratio: unset;`
+  : `aspect-ratio: ${ratio};`;
+---
+
+<div
+  class="img-placeholder"
+  style={style}
+  aria-label={label}
+  role="img"
+>
+  <span>{label}</span>
+</div>
