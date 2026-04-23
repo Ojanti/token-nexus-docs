@@ -1,130 +1,384 @@
-﻿---
-// Sidebar.astro
-// Fixed 248px navigation sidebar with section grouping and active link highlighting
-
+---
 interface Props {
   currentPath: string;
 }
 
 const { currentPath } = Astro.props;
-
 const base = '/token-nexus-docs';
 
-interface NavItem {
-  label: string;
-  href: string;
-}
-
-interface NavSection {
-  section: string;
-  items: NavItem[];
-}
+interface NavItem { label: string; href: string; }
+interface NavSection { section: string; items: NavItem[]; collapseOnDesktop?: boolean; }
 
 const navGroups: NavSection[] = [
   {
-    section: 'START HERE',
+    section: 'Getting Started',
     items: [
-      { label: 'Introduction', href: `${base}/introduction` },
+      { label: 'What is TokenNexus', href: `${base}/overview/what-is-tokennexus` },
+      { label: 'See It In Action', href: `${base}/overview/see-it-in-action` },
       { label: 'Quickstart', href: `${base}/quickstart` },
     ],
   },
   {
-    section: 'CONCEPTS',
+    section: 'Core Workflow',
     items: [
-      { label: 'Tokens, Variables & the Gap', href: `${base}/concepts/tokens-variables-gap` },
-      { label: 'Mapping as a Contract', href: `${base}/concepts/mapping-as-contract` },
-      { label: 'How Sync Works', href: `${base}/concepts/how-sync-works` },
-      { label: 'Token Formats', href: `${base}/concepts/token-formats` },
+      { label: 'How It Works', href: `${base}/core/how-it-works` },
+      { label: 'Connect to GitHub', href: `${base}/core/connect-to-github` },
+      { label: 'Generate Variables', href: `${base}/core/generate-variables` },
+      { label: 'Map Your Variables', href: `${base}/core/map-your-variables` },
+      { label: 'Review & Save', href: `${base}/core/review-and-save` },
+      { label: 'Run a Sync', href: `${base}/core/run-a-sync` },
     ],
   },
   {
-    section: 'SETUP',
+    section: 'Going Deeper',
     items: [
-      { label: 'Connecting Your Repository', href: `${base}/setup/connecting-repository` },
-      { label: 'Generating a GitHub PAT', href: `${base}/setup/github-pat` },
-      { label: 'Choosing Token Files', href: `${base}/setup/choosing-token-files` },
+      { label: 'Mode Bindings', href: `${base}/deeper/mode-bindings` },
+      { label: 'Team Setup', href: `${base}/deeper/team-setup` },
+      { label: 'Auto-Match In Depth', href: `${base}/deeper/auto-match-in-depth` },
     ],
   },
   {
-    section: 'MAPPING',
+    section: 'Troubleshooting',
+    collapseOnDesktop: true,
     items: [
-      { label: 'Auto-Match', href: `${base}/mapping/auto-match` },
-      { label: 'When to Trust Auto-Match', href: `${base}/mapping/when-to-trust-auto-match` },
-      { label: 'Manual Mapping', href: `${base}/mapping/manual-mapping` },
-      { label: 'Mode Bindings', href: `${base}/mapping/mode-bindings` },
-      { label: 'Reviewing & Saving', href: `${base}/mapping/reviewing-saving` },
+      { label: 'Troubleshooting Guide', href: `${base}/troubleshooting` },
     ],
   },
   {
-    section: 'SYNC',
+    section: 'Reference',
+    collapseOnDesktop: true,
     items: [
-      { label: 'Reading a Diff', href: `${base}/sync/reading-a-diff` },
-      { label: 'Selecting Updates', href: `${base}/sync/selecting-updates` },
-      { label: 'Undo Strategy', href: `${base}/sync/undo-strategy` },
-    ],
-  },
-  {
-    section: 'ADVANCED',
-    items: [
-      { label: 'Export & Import', href: `${base}/advanced/export-import` },
-      { label: 'Team Collaboration', href: `${base}/advanced/team-collaboration` },
-    ],
-  },
-  {
-    section: 'TROUBLESHOOTING',
-    items: [
-      { label: 'Connection Issues', href: `${base}/troubleshooting/connection-issues` },
-      { label: 'No Files Found', href: `${base}/troubleshooting/no-files-found` },
-      { label: 'Parsing Errors', href: `${base}/troubleshooting/parsing-errors` },
-      { label: 'Diffs Look Wrong', href: `${base}/troubleshooting/diffs-look-wrong` },
-      { label: 'Sync Did Not Apply', href: `${base}/troubleshooting/sync-did-not-apply` },
-      { label: 'Recovery Guide', href: `${base}/troubleshooting/recovery` },
-    ],
-  },
-  {
-    section: 'REFERENCE',
-    items: [
-      { label: 'Value Type Compatibility', href: `${base}/reference/value-types` },
-      { label: 'Auto-Match Scoring', href: `${base}/reference/auto-match-scoring` },
-      { label: 'Privacy & Security', href: `${base}/reference/privacy-security` },
-    ],
-  },
-  {
-    section: 'RESOURCES',
-    items: [
+      { label: 'Reference', href: `${base}/reference` },
       { label: 'Resources', href: `${base}/resources` },
     ],
   },
 ];
 
+const isHomePage = currentPath === `${base}` || currentPath === `${base}/` || currentPath === '/token-nexus-docs' || currentPath === '/token-nexus-docs/';
+
 function isActive(href: string, current: string): boolean {
-  // Normalize trailing slashes and compare
-  const normalizedHref = href.replace(/\/$/, '');
-  const normalizedCurrent = current.replace(/\/$/, '');
-  return normalizedCurrent === normalizedHref || normalizedCurrent.startsWith(normalizedHref + '/');
+  const a = href.replace(/\/$/, '');
+  const b = current.replace(/\/$/, '');
+  return b === a || b.startsWith(a + '/');
+}
+
+function sectionHasActive(items: NavItem[], current: string, sectionName: string): boolean {
+  if (isHomePage && sectionName === 'Getting Started') return true;
+  return items.some((item) => isActive(item.href, current));
 }
 ---
 
-<!-- Mobile overlay -->
 <div class="sidebar-overlay" id="sidebar-overlay" aria-hidden="true"></div>
 
 <nav class="sidebar" id="sidebar" aria-label="Documentation navigation">
-  {navGroups.map((group) => (
-    <div>
-      <span class="sidebar-section-label">{group.section}</span>
-      <ul class="sidebar-nav" role="list">
-        {group.items.map((item) => (
-          <li class="sidebar-nav-item">
-            <a
-              href={item.href}
-              class:list={['sidebar-nav-link', { active: isActive(item.href, currentPath) }]}
-              aria-current={isActive(item.href, currentPath) ? 'page' : undefined}
-            >
-              {item.label}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </div>
-  ))}
+  <!-- Search trigger -->
+  <div class="sidebar-search-wrap">
+    <button class="sidebar-search-btn" id="search-trigger" aria-label="Search documentation">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <span>Search docs...</span>
+      <kbd id="search-hotkey">Ctrl K</kbd>
+    </button>
+  </div>
+
+  {navGroups.map((group, i) => {
+    const active = sectionHasActive(group.items, currentPath, group.section);
+    const sectionId = `nav-section-${i}`;
+    return (
+      <div class="sidebar-group">
+        <button
+          class:list={['sidebar-section-toggle', { 'sidebar-section-toggle--active': active }]}
+          aria-expanded={active ? 'true' : 'false'}
+          aria-controls={sectionId}
+          data-sidebar-toggle
+          data-collapse-on-desktop={group.collapseOnDesktop ? 'true' : undefined}
+        >
+          <span class="sidebar-section-label">{group.section}</span>
+          <svg class="sidebar-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <!-- Initial collapsed state set via inline style - no JS flash -->
+        <ul
+          class="sidebar-nav"
+          id={sectionId}
+          role="list"
+          style={!active ? 'height:0;overflow:hidden;' : undefined}
+        >
+          {group.items.map((item) => {
+            const itemActive = isActive(item.href, currentPath);
+            return (
+              <li class="sidebar-nav-item">
+                <a
+                  href={item.href}
+                  class:list={['sidebar-nav-link', { active: itemActive }]}
+                  aria-current={itemActive ? 'page' : undefined}
+                >
+                  {item.label}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    );
+  })}
 </nav>
+
+<!-- Search modal -->
+<div class="search-modal" id="search-modal" aria-hidden="true" role="dialog" aria-label="Search">
+  <div class="search-modal-backdrop" id="search-backdrop"></div>
+  <div class="search-modal-box">
+    <div class="search-input-wrap">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <input
+        type="text"
+        id="search-input"
+        class="search-input"
+        placeholder="Search documentation..."
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <button class="search-close-btn" id="search-close" aria-label="Close search">
+        <kbd>Esc</kbd>
+      </button>
+    </div>
+    <div class="search-results" id="search-results">
+      <p class="search-hint">Start typing to search...</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Persistent state - survives across view transitions (module runs once)
+  let pagefindLoaded = false;
+  let pagefind: any = null;
+  let globalListenersAdded = false;
+
+  function isDesktopNav() {
+    return window.matchMedia('(min-width: 769px)').matches;
+  }
+
+  function expandNavSection(btn: HTMLButtonElement, list: HTMLElement) {
+    btn.setAttribute('aria-expanded', 'true');
+    list.style.height = 'auto';
+    list.style.overflow = '';
+  }
+
+  function collapseNavSection(btn: HTMLButtonElement, list: HTMLElement) {
+    btn.setAttribute('aria-expanded', 'false');
+    list.style.height = '0';
+    list.style.overflow = 'hidden';
+  }
+
+  async function loadPagefind() {
+    if (pagefindLoaded) return;
+    try {
+      const path = ['/token-nexus-docs', 'pagefind', 'pagefind.js'].join('/');
+      pagefind = await import(/* @vite-ignore */ path);
+      await pagefind.init();
+      pagefindLoaded = true;
+    } catch (e) {
+      console.info('Pagefind not available in dev mode. Run npm run build to enable search.');
+    }
+  }
+
+  function initSidebar() {
+    // Section collapse toggles
+    document.querySelectorAll<HTMLButtonElement>('[data-sidebar-toggle]').forEach((btn) => {
+      if ((btn as any).__sidebarBound) return;
+      (btn as any).__sidebarBound = true;
+
+      const listId = btn.getAttribute('aria-controls');
+      if (!listId) return;
+      const list = document.getElementById(listId);
+      if (!list) return;
+
+      btn.addEventListener('click', () => {
+        const isOpen = btn.getAttribute('aria-expanded') === 'true';
+
+        if (isOpen) {
+          list.style.height = list.scrollHeight + 'px';
+          list.style.overflow = 'hidden';
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              list.style.height = '0';
+            });
+          });
+          btn.setAttribute('aria-expanded', 'false');
+        } else {
+          list.style.overflow = 'hidden';
+          list.style.height = '0';
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              list.style.height = list.scrollHeight + 'px';
+              list.addEventListener('transitionend', () => {
+                list.style.height = 'auto';
+                list.style.overflow = '';
+              }, { once: true });
+            });
+          });
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+
+    // Desktop: expand core sections, collapse Troubleshooting + Reference unless active
+    if (isDesktopNav()) {
+      document.querySelectorAll<HTMLButtonElement>('[data-sidebar-toggle]').forEach((btn) => {
+        const listId = btn.getAttribute('aria-controls');
+        if (!listId) return;
+        const list = document.getElementById(listId);
+        if (!list) return;
+        const collapseOnDesktop = btn.getAttribute('data-collapse-on-desktop') === 'true';
+        const isAlreadyActive = btn.getAttribute('aria-expanded') === 'true';
+        if (collapseOnDesktop && !isAlreadyActive) return;
+        expandNavSection(btn, list);
+      });
+    }
+
+    // Mobile sidebar
+    const hamburger = document.getElementById('sidebar-toggle');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+
+    function openSidebar() {
+      sidebar?.classList.add('sidebar--open');
+      overlay?.classList.add('sidebar-overlay--visible');
+      hamburger?.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSidebar() {
+      sidebar?.classList.remove('sidebar--open');
+      overlay?.classList.remove('sidebar-overlay--visible');
+      hamburger?.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+
+    if (hamburger && !(hamburger as any).__sidebarBound) {
+      (hamburger as any).__sidebarBound = true;
+      hamburger.addEventListener('click', () => {
+        sidebar?.classList.contains('sidebar--open') ? closeSidebar() : openSidebar();
+      });
+    }
+    if (overlay && !(overlay as any).__sidebarBound) {
+      (overlay as any).__sidebarBound = true;
+      overlay.addEventListener('click', closeSidebar);
+    }
+
+    // Search
+    const searchModal = document.getElementById('search-modal');
+    const searchInput = document.getElementById('search-input') as HTMLInputElement | null;
+    const searchResults = document.getElementById('search-results');
+    const searchTrigger = document.getElementById('search-trigger');
+    const searchClose = document.getElementById('search-close');
+    const searchBackdrop = document.getElementById('search-backdrop');
+    const searchHotkey = document.getElementById('search-hotkey');
+
+    if (searchHotkey) {
+      const platform = navigator?.platform ?? '';
+      const isMac = /Mac|iPhone|iPad|iPod/i.test(platform);
+      searchHotkey.textContent = isMac ? 'Cmd K' : 'Ctrl K';
+    }
+
+    function openSearch() {
+      searchModal?.removeAttribute('aria-hidden');
+      searchModal?.classList.add('search-modal--open');
+      searchInput?.focus();
+      document.body.style.overflow = 'hidden';
+      loadPagefind();
+    }
+
+    function closeSearch() {
+      searchModal?.setAttribute('aria-hidden', 'true');
+      searchModal?.classList.remove('search-modal--open');
+      document.body.style.overflow = '';
+      if (searchInput) searchInput.value = '';
+      if (searchResults) searchResults.innerHTML = '<p class="search-hint">Start typing to search...</p>';
+    }
+
+    if (searchTrigger && !(searchTrigger as any).__sidebarBound) {
+      (searchTrigger as any).__sidebarBound = true;
+      searchTrigger.addEventListener('click', openSearch);
+    }
+    if (searchClose && !(searchClose as any).__sidebarBound) {
+      (searchClose as any).__sidebarBound = true;
+      searchClose.addEventListener('click', closeSearch);
+    }
+    if (searchBackdrop && !(searchBackdrop as any).__sidebarBound) {
+      (searchBackdrop as any).__sidebarBound = true;
+      searchBackdrop.addEventListener('click', closeSearch);
+    }
+
+    // Document-level listeners: add only once
+    if (!globalListenersAdded) {
+      globalListenersAdded = true;
+
+      let debounceTimer: ReturnType<typeof setTimeout>;
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          const modal = document.getElementById('search-modal');
+          if (modal?.classList.contains('search-modal--open')) {
+            closeSearch();
+          } else {
+            closeSidebar();
+          }
+        }
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+          e.preventDefault();
+          const modal = document.getElementById('search-modal');
+          modal?.classList.contains('search-modal--open') ? closeSearch() : openSearch();
+        }
+      });
+    }
+
+    if (searchInput && !(searchInput as any).__sidebarBound) {
+      (searchInput as any).__sidebarBound = true;
+      let debounceTimer: ReturnType<typeof setTimeout>;
+      searchInput.addEventListener('input', async () => {
+        const query = searchInput.value.trim();
+        clearTimeout(debounceTimer);
+
+        if (!query) {
+          if (searchResults) searchResults.innerHTML = '<p class="search-hint">Start typing to search...</p>';
+          return;
+        }
+
+        debounceTimer = setTimeout(async () => {
+          if (!pagefindLoaded) {
+            if (searchResults) searchResults.innerHTML = '<p class="search-hint">Search is only available in the built site.</p>';
+            return;
+          }
+
+          const results = await pagefind.search(query);
+          const data = await Promise.all(results.results.slice(0, 8).map((r: any) => r.data()));
+
+          if (!data.length) {
+            if (searchResults) searchResults.innerHTML = '<p class="search-hint">No results found.</p>';
+            return;
+          }
+
+          if (searchResults) {
+            searchResults.innerHTML = data.map((item: any) => `
+              <a href="${item.url}" class="search-result-item">
+                <span class="search-result-title">${item.meta?.title ?? 'Untitled'}</span>
+                <span class="search-result-excerpt">${item.excerpt}</span>
+              </a>
+            `).join('');
+          }
+        }, 200);
+      });
+    }
+  }
+
+  // Run on initial load and after every view transition
+  initSidebar();
+  document.addEventListener('astro:page-load', initSidebar);
+</script>

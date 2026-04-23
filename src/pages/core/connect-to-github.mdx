@@ -1,0 +1,82 @@
+---
+layout: ../../layouts/DocsLayout.astro
+title: Connect to GitHub
+description: How to generate a GitHub PAT, connect your repository, and select your token files.
+---
+
+import Callout from '../../components/Callout.astro';
+import GuideStep from '../../components/GuideStep.astro';
+import ImagePlaceholder from '../../components/ImagePlaceholder.astro';
+import PluginBanner from '../../components/PluginBanner.astro';
+
+# Connect to GitHub
+
+The setup takes about 5 minutes the first time. You will do it once per Figma file. After the initial connection, the configuration persists in the file and you will not need to repeat it unless you change repositories.
+
+## Step 1 - Generate a GitHub Personal Access Token
+
+A Personal Access Token (PAT) is how TokenNexus authenticates with GitHub on your behalf. You need one with read access to the repository containing your token files.
+
+1. Go to GitHub Settings - Developer Settings - Personal Access Tokens - Fine-grained tokens (recommended) or Tokens (classic)
+2. Click Generate new token
+3. Give the token a name like "TokenNexus - [your file name]" so you can identify it later
+4. Under Repository access, select the specific repository containing your token files
+5. Under Permissions, set Contents to Read-only. That is the only permission TokenNexus needs.
+
+<ImagePlaceholder label="Screenshot: GitHub PAT creation screen with Contents permission set to Read-only" />
+
+<Callout variant="warning">
+  Save your PAT immediately after generating it. GitHub shows it only once. If you lose it, you will need to generate a new one. TokenNexus stores the PAT in Figma's local plugin storage - it is not visible to other editors in the file and is never sent anywhere except the GitHub API.
+</Callout>
+
+If your organization uses classic tokens instead of fine-grained, select the `repo` scope. The plugin only reads - it never writes to your repository - so the broader `repo` scope is only necessary because classic tokens cannot be scoped more narrowly.
+
+## Step 2 - Open the plugin and enter your repository details
+
+<GuideStep step={1} title="Open TokenNexus in your Figma file">
+  Go to Plugins - TokenNexus. On a fresh install, the plugin opens on the setup wizard. If the plugin has been configured before in this file, it opens on the main mapping panel. To reconfigure, go to Settings.
+
+  <ImagePlaceholder label="Screenshot: TokenNexus plugin open on the setup wizard step 1" />
+</GuideStep>
+
+<GuideStep step={2} title="Enter your repository">
+  In the Repository field, enter your repository in `owner/repo` format. For example: `acme-design/tokens` or `my-org/design-system`.
+</GuideStep>
+
+<GuideStep step={3} title="Paste your PAT">
+  Paste the Personal Access Token you generated. The plugin masks it immediately. It is stored locally - not in the Figma file and not on any server.
+</GuideStep>
+
+<GuideStep step={4} title="Set the folder path" tip="The path must point to a directory, not a file. TokenNexus scans the directory and finds every JSON file inside it. If your tokens are in the repository root, enter a forward slash or leave the field empty.">
+  Enter the path to the directory in your repository that contains your token files. This path is relative to the repository root. If your tokens are at `packages/tokens/src/`, enter that exactly.
+</GuideStep>
+
+<GuideStep step={5} title="Set the branch">
+  Specify the branch to read from. Defaults to `main`. Enter the branch name exactly as it appears in GitHub.
+</GuideStep>
+
+<GuideStep step={6} title="Click Connect and verify">
+  Click Connect. TokenNexus makes a test request to GitHub using your credentials. If the connection succeeds, you move to the file selection step. If it fails, the error message will tell you whether the problem is authentication, the repository path, or the branch name.
+
+  <ImagePlaceholder label="Screenshot: Successful connection confirmation screen" />
+</GuideStep>
+
+## Step 3 - Select your token files
+
+After a successful connection, TokenNexus lists every JSON file it found in the folder path you specified. Select the files that contain your design token definitions.
+
+<GuideStep step={1} title="Review the file list">
+  Each file shows its path relative to the folder you specified. Files are grouped by subdirectory if your tokens are organized that way.
+
+  <ImagePlaceholder label="Screenshot: File selection screen listing 4 JSON files with checkboxes" />
+</GuideStep>
+
+<GuideStep step={2} title="Select token source files" tip="If you use Style Dictionary and have separate source and output files in the same folder, only select the source files - typically the ones with names like color.json, typography.json, or primitive.json.">
+  Check the files that define your tokens. Leave out configuration files, generated output files, and anything that does not define token values directly.
+</GuideStep>
+
+<GuideStep step={3} title="Click Continue">
+  The plugin loads your selected files and moves you to the main mapping panel. From here, you are ready to start mapping.
+</GuideStep>
+
+<PluginBanner variant="compact" />

@@ -1,25 +1,66 @@
 ---
-// ImagePlaceholder.astro
-// Dashed placeholder box for screenshots not yet captured
-
 interface Props {
   label: string;
+  src?: string;
+  alt?: string;
   ratio?: string;
   height?: number;
+  caption?: string;
 }
 
-const { label, ratio = '16/9', height } = Astro.props;
+const { label, src, alt, ratio = '16/9', height, caption } = Astro.props;
 
-const style = height
+const sizeStyle = height
   ? `height: ${height}px; aspect-ratio: unset;`
   : `aspect-ratio: ${ratio};`;
+
+const resolvedAlt = alt ?? label;
 ---
 
-<div
-  class="img-placeholder"
-  style={style}
-  aria-label={label}
-  role="img"
->
-  <span>{label}</span>
-</div>
+{src ? (
+  <figure class="doc-image">
+    <div class="doc-image-frame" style={sizeStyle}>
+      <img src={src} alt={resolvedAlt} loading="lazy" />
+    </div>
+    {caption && <figcaption>{caption}</figcaption>}
+  </figure>
+) : (
+  <div
+    class="img-placeholder"
+    style={sizeStyle}
+    aria-label={label}
+    role="img"
+  >
+    <span>{label}</span>
+  </div>
+)}
+
+<style>
+  .doc-image {
+    margin: 1.5rem 0;
+  }
+
+  .doc-image-frame {
+    background: var(--bg-surface-1);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .doc-image-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .doc-image figcaption {
+    display: block;
+    font-size: 12px;
+    font-style: italic;
+    color: var(--text-muted);
+    margin-top: 8px;
+    padding: 0 4px;
+  }
+</style>

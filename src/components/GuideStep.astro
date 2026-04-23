@@ -1,0 +1,27 @@
+---
+interface Props {
+  step: number;
+  title: string;
+  tip?: string;
+}
+
+const { step, title, tip } = Astro.props;
+
+const headingId = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+---
+
+<div class="guide-step">
+  <div class="guide-step-header">
+    <span class="guide-step-number">{step}</span>
+    <h3 class="guide-step-title" id={headingId}>{title}</h3>
+  </div>
+  <div class="guide-step-body">
+    <slot />
+    {tip && (
+      <div class="guide-step-tip">
+        <span class="guide-step-tip-label">TIP</span>
+        <p>{tip}</p>
+      </div>
+    )}
+  </div>
+</div>

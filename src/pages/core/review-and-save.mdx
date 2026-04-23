@@ -1,0 +1,64 @@
+---
+layout: ../../layouts/DocsLayout.astro
+title: Review and Save Mappings
+description: How the review panel works, what the ready, broken, and not-ready states mean, and how partial saves let you progress incrementally.
+---
+
+import Callout from '../../components/Callout.astro';
+import ImagePlaceholder from '../../components/ImagePlaceholder.astro';
+import PluginBanner from '../../components/PluginBanner.astro';
+
+# Review and Save Mappings
+
+When you map a variable to a token - through auto-match, manually, or via Generate Variables - the change lands in a pending queue. Nothing is written to the Figma file until you explicitly save.
+
+The review panel sits between pending and saved. It shows every queued change, its current status, and lets you save the ones that are ready while holding back anything that is not.
+
+## Opening the review panel
+
+Click **Review changes** in the plugin's top navigation bar. The panel opens with a summary: how many items are pending, how many are ready to save, and how many need attention.
+
+<ImagePlaceholder label="Screenshot: Review changes panel showing a mix of ready and blocked items with status pills" ratio="16/9" />
+
+## The three statuses
+
+**Ready to save** - The mapping is valid and will be written to the file. The token path exists, all required mode bindings are complete, and there are no conflicts. These save immediately when you click Save changes.
+
+**Broken** - The token path this mapping points to no longer exists in the loaded token files. The most common cause is a token that was renamed or deleted in the repository since the mapping was set up. Fix it by remapping the variable to the correct token in the mapping panel, or remove the mapping entirely by clicking the × on its row.
+
+**Not ready** - The mapping exists but cannot be saved yet. Two reasons this happens:
+
+- The variable has multiple modes and the mode bindings are not complete. Open the mapping panel and finish setting up the mode bindings for this variable.
+- The variable is a Figma alias - it references another variable that is already mapped. Alias variables inherit values through their mapped source automatically, so a direct mapping on the alias itself is skipped to avoid duplication.
+
+<Callout variant="note">
+  The alias skip is intentional, not an error. If variable A aliases variable B, and B is mapped to a token, syncing B's token value also updates A through the alias. You do not need to map A separately.
+</Callout>
+
+## Partial saves
+
+You do not need to resolve every blocked item before saving. When you click **Save changes**, TokenNexus saves everything marked Ready to save and leaves the rest in the review queue.
+
+A toast message confirms how many changes were saved and how many remain. Come back to the review panel when you are ready to finish the blocked items.
+
+This matters most after a Generate Variables run, where you may have dozens of semantic mappings that still need mode bindings completed before they can save.
+
+## Searching the review panel
+
+Type in the search field to filter pending changes by variable name, token path, token file, mode label, or current value. Useful when the queue is long after a bulk operation.
+
+<ImagePlaceholder label="Screenshot: Review panel with search field active and filtered results showing" />
+
+## Discarding changes
+
+**Discard all** clears the entire pending queue and restores the last saved state. This removes all unsaved mapping work. A confirmation dialog prevents accidental discards.
+
+## What saved means for sync
+
+Once mappings are saved, they are written to the Figma file and persist across sessions. Every editor of the file can see and use them.
+
+<Callout variant="warning">
+  Sync only uses saved mappings. Pending changes sitting in the review queue are not included in a sync run. Save your pending changes first, then sync.
+</Callout>
+
+<PluginBanner variant="compact" />

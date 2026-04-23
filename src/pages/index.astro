@@ -1,6 +1,118 @@
-﻿---
-// Redirect root to /introduction
-return Astro.redirect('/token-nexus-docs/introduction');
+---
+import DocsLayout from '../layouts/DocsLayout.astro';
+import ValueProp from '../components/ValueProp.astro';
+import UseCaseCard from '../components/UseCaseCard.astro';
+import VideoPlaceholder from '../components/VideoPlaceholder.astro';
+import PluginBanner from '../components/PluginBanner.astro';
+import CreatorWork from '../components/CreatorWork.astro';
+import BeamDivider from '../components/BeamDivider.astro';
+import ImagePlaceholder from '../components/ImagePlaceholder.astro';
 ---
 
-<meta http-equiv="refresh" content="0;url=/token-nexus-docs/introduction" />
+<DocsLayout title="TokenNexus" description="Keep Figma variables in sync with your token repo - without renaming collections, migrating formats, or giving up control.">
+
+  <div class="home-hero">
+    <!-- <div class="home-hero-eyebrow">Free Figma Plugin</div> -->
+    <h1>Keep Figma variables in sync with your token repo</h1>
+    <p class="home-hero-sub">
+      TokenNexus synchronises your GitHub design tokens with Figma variables -> without renaming collections, migrating formats, or giving up control to any platform.
+    </p>
+    <div class="hero-proof-points">
+      <span>Smart mapping</span>
+      <span>You control every sync</span>
+      <span>Any token format, any structure</span>
+    </div>
+    <div class="home-hero-actions">
+      <a
+        href="https://www.figma.com/community/plugin/1617061240636708738/tokennexus-for-figma"
+        class="btn-primary"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Install Free Plugin
+        <svg viewBox="0 0 16 16" fill="none" width="14" height="14" aria-hidden="true">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </a>
+      <a href="/token-nexus-docs/quickstart" class="btn-secondary">
+        Read the Quickstart
+      </a>
+    </div>
+  </div>
+
+  <ImagePlaceholder label="Plugin screenshot: TokenNexus main workspace showing the mapping panel" ratio="16/9" />
+
+  <BeamDivider />
+
+  <div>
+    <span class="home-section-label">What you get</span>
+    <div class="home-section-title">Built for how design systems actually work</div>
+    <div class="value-props">
+      <ValueProp
+        icon="match"
+        headline="Intelligent auto-matching"
+        body="TokenNexus looks at variable names, token paths, current values, and types to figure out what maps to what. Most files are 80%+ matched before you touch anything."
+      />
+      <ValueProp
+        icon="zero"
+        headline="Nothing to rename or migrate"
+        body="Your Figma collections stay as they are. Your token files stay in whatever format they're in. DTCG, Tokens Studio, raw JSON - all supported."
+      />
+      <ValueProp
+        icon="generate"
+        headline="No variables yet? Generate them"
+        body="Point TokenNexus at your token repo and it creates the Figma variables, sets up your modes, and saves the mapping - ready to sync from day one."
+      />
+      <ValueProp
+        icon="review"
+        headline="Review every change before it applies"
+        body="Sync shows a diff of what changed since your last update. You pick what to apply. Nothing writes to Figma without your sign-off."
+      />
+    </div>
+  </div>
+
+  <BeamDivider />
+
+  <div>
+    <span class="home-section-label">Recognize yourself here?</span>
+    <div class="home-section-title">Common scenarios</div>
+    <div class="use-case-grid">
+      <UseCaseCard
+        number="01"
+        problem="Your token repo changed, but Figma never got the memo"
+        outcome="Open TokenNexus, click Sync, review the diff. Apply the changes you want. Figma is current in under a minute."
+      />
+      <UseCaseCard
+        number="02"
+        problem="You inherited a Figma file with 200 variables and no documentation"
+        outcome="Run auto-match. TokenNexus suggests mappings based on names and values. Confirm, save, and the file is wired up."
+      />
+      <UseCaseCard
+        number="03"
+        problem="You're setting up a new design system and want it connected from the start"
+        outcome="No variables yet? Generate them straight from your token repo - collections, modes, and mappings all set up in one step."
+      />
+    </div>
+  </div>
+
+  <BeamDivider />
+
+  <div>
+    <span class="home-section-label">See it in 2 minutes</span>
+    <div class="home-section-title">Watch how a sync works</div>
+    <VideoPlaceholder
+      label="Video: Full sync walkthrough - from token change in GitHub to updated Figma variable"
+      caption="See the entire workflow from repo connection to your first successful sync."
+    />
+    <p>
+      Want a deeper walkthrough? <a href="/token-nexus-docs/overview/see-it-in-action">See It In Action &rarr;</a>
+    </p>
+  </div>
+
+  <BeamDivider />
+
+  <CreatorWork />
+
+  <PluginBanner variant="full" />
+
+</DocsLayout>

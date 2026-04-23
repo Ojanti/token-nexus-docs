@@ -1,0 +1,32 @@
+---
+interface Props {
+  icon: 'sync' | 'review' | 'format' | 'match' | 'zero' | 'generate';
+  headline: string;
+  body: string;
+}
+
+const { icon, headline, body } = Astro.props;
+
+const paths: Record<string, string[]> = {
+  sync: ['M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0020 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74A7.93 7.93 0 004 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z'],
+  review: ['M3 6h18M3 12h18M3 18h11'],
+  format: ['M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z'],
+  match: ['M9 12l2 2 4-4', 'M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
+  zero: ['M12 3v1m0 16v1M4.22 4.22l.707.707m12.02 12.02.707.707M3 12h1m16 0h1M4.927 19.073l.707-.707M18.364 5.636l.707-.707', 'M12 8a4 4 0 100 8 4 4 0 000-8z'],
+  generate: ['M12 4v16M4 12h16'],
+};
+---
+
+<div class="value-prop">
+  <div class="value-prop-icon">
+    <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.5" width="22" height="22" aria-hidden="true">
+      {paths[icon].map((d) => (
+        <path d={d} stroke-linecap="round" stroke-linejoin="round" />
+      ))}
+    </svg>
+  </div>
+  <div class="value-prop-content">
+    <div class="value-prop-headline">{headline}</div>
+    <div class="value-prop-body">{body}</div>
+  </div>
+</div>

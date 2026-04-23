@@ -1,0 +1,43 @@
+---
+interface Props {
+  label: string;
+  caption?: string;
+  src?: string;
+  poster?: string;
+}
+
+const { label, caption, src, poster } = Astro.props;
+---
+
+<div class="doc-video-wrap">
+  {src ? (
+    <video class="doc-video" controls preload="metadata" poster={poster} aria-label={label}>
+      <source src={src} />
+    </video>
+  ) : (
+    <div class="video-placeholder">
+      <div class="video-play-btn" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+          <path d="M8 5v14l11-7z" />
+        </svg>
+      </div>
+      <span class="video-label">{label}</span>
+    </div>
+  )}
+  {caption && <p class="video-caption">{caption}</p>}
+</div>
+
+<style>
+  .doc-video-wrap {
+    margin: 1.5rem 0;
+  }
+
+  .doc-video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: var(--bg-surface-1);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    display: block;
+  }
+</style>

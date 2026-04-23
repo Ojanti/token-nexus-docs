@@ -1,0 +1,95 @@
+---
+layout: ../../layouts/DocsLayout.astro
+title: Auto-Match In Depth
+description: How the auto-match algorithm scores potential pairings, what each component measures, and how to get better results.
+---
+
+import Callout from '../../components/Callout.astro';
+import ConfidenceMeter from '../../components/ConfidenceMeter.astro';
+
+# Auto-Match In Depth
+
+Auto-match is not magic. It is a scoring algorithm that compares Figma variables and design tokens across multiple dimensions. Understanding how it works helps you get better results and know when to trust it.
+
+## The scoring model
+
+Each potential pairing receives a composite score from 0 to 1 built from three base components:
+
+| Component | Base weight | What it measures |
+|---|---|---|
+| Name similarity | 50% | How closely the variable name and token path match, accounting for different separators and abbreviations |
+| Value proximity | 35% | How similar the current Figma value is to the token value |
+| Type compatibility | 15% | Whether the Figma variable type is compatible with the token's declared type |
+
+Type compatibility is a hard gate - an incompatible type pair forces the entire score to 0 regardless of how well the names and values match.
+
+The base score is the starting point. The algorithm then applies a set of conditional bonuses and penalties on top of it based on structural signals in the names and values. A pair with a mediocre base score can rank higher than a pair with a good base score if it has stronger structural alignment.
+
+## Name similarity
+
+The algorithm compares the variable name and token path after normalizing both - stripping separators (`/`, `.`, `-`, `_`), lowercasing, and expanding known abbreviations. `bg` becomes `background`, `sm` becomes `small`, `pri` becomes `primary`.
+
+Common abbreviations: `bg` (background), `fg` (foreground), `txt` (text), `btn` (button), `sm` / `md` / `lg` / `xl` (size scale), `clr` (color), `sec` (secondary), `pri` (primary).
+
+Beyond the base string similarity, the algorithm scores structural signals separately:
+
+- **Segment overlap** - how many meaningful path segments the variable and token share
+- **Suffix match** - whether the final segment (the most specific part of the name) matches
+- **Contained sequence** - whether the full token path appears as a subsequence in the variable name or vice versa
+- **Variant and numeric alignment** - whether scale modifiers like `100`, `primary`, or `hover` match between both sides. A mismatch here applies a penalty, not just a lower score.
+
+This is why a variable named `Color/Brand/Primary` and a token at `color.brand.primary` scores high despite looking nothing alike as raw strings - every structural signal aligns.
+
+## Value proximity
+
+For color tokens, the algorithm converts both values to LAB color space and measures perceptual distance. Two colors that look similar to the human eye score higher than two that are numerically close in hex but visually different.
+
+For number tokens, the algorithm uses proportional difference. An exact numeric match on a float variable gives a significant bonus on top of the base value score.
+
+For strings and booleans, only exact matches count.
+
+<Callout variant="tip">
+  Value proximity is most useful when your variable and token names follow different conventions. If the name similarity score is low but the values are nearly identical, the algorithm can still surface the right match - especially for color tokens.
+</Callout>
+
+## Semantic auto-binding
+
+After the standard scoring pass, the algorithm runs a second pass specifically for **semantic variables** - variables that reference other variables (aliases) and correspond to tokens that reference other tokens.
+
+This pass attempts to bind each semantic variable's modes to existing primitive mappings rather than scoring directly against token paths. If variable `Color/Background/Default` has a Light mode value that matches the already-mapped primitive `color.neutral.50`, the algorithm creates the semantic binding automatically without requiring a name match.
+
+If the primitive binding pass fails, the algorithm falls back to direct token matching using a stricter threshold - requiring both a strong name signal and an exact value match before applying automatically.
+
+The result is that files with a well-structured two-tier token system (primitives + semantic references) get a much higher auto-match rate than the base scoring alone would produce.
+
+## Thresholds
+
+<ConfidenceMeter />
+
+- **Below 0.38**: No suggestion is made. The pairing is not shown.
+- **0.38 to 0.74**: A suggestion appears. You can confirm or dismiss it with one click.
+- **0.75 and above**: The mapping is applied automatically without a confirmation step.
+
+## When to trust auto-match
+
+Trust it when:
+
+- Your variable names and token names follow the same structural pattern (both use a scale like `100`, `200`, `300`)
+- Your files are well-organized and both sides have been maintained intentionally
+- The confidence score is 0.75 or above
+
+Be skeptical when:
+
+- Your Figma file has legacy naming from before your token system existed
+- You recently reorganized the token repository (paths changed, even if values did not)
+- The suggestion seems right by name but the value swatches look different
+
+<Callout variant="why">
+  Auto-match is acceleration, not authority. Its job is to reduce the time you spend on the first mapping of a file. The final check is always yours.
+</Callout>
+
+## Improving auto-match results
+
+The single biggest improvement you can make is naming consistency. If Figma variables and token paths use the same words in the same order, auto-match scores go up substantially. You do not need perfect alignment - just enough structural similarity that the algorithm can find the pattern.
+
+If you are working with a legacy file where naming is inconsistent, consider doing one manual mapping pass to establish the pattern, then running auto-match on the remaining variables.

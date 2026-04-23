@@ -1,0 +1,46 @@
+---
+layout: ../../layouts/DocsLayout.astro
+title: Mode Bindings
+description: How to connect a single Figma variable to different tokens per mode - for light and dark themes and other multi-mode setups.
+---
+
+import GuideStep from '../../components/GuideStep.astro';
+import ImagePlaceholder from '../../components/ImagePlaceholder.astro';
+
+# Mode Bindings
+
+A semantic variable in Figma holds different values per mode. A background color in light mode is `#FFFFFF`; in dark mode it is `#0A0A0A`. Mode bindings let you map both states to the right source tokens.
+
+## What mode bindings are
+
+A standard mapping connects one variable to one token. The same token value applies across all modes. A mode binding connects one variable to different tokens depending on the active mode. The light mode value comes from one token; the dark mode value comes from another.
+
+This matches how semantic tokens are typically structured in a token repository - a `color.background.default` token might be an alias to `color.neutral.0` in the light theme set and `color.neutral.950` in the dark theme set.
+
+<ImagePlaceholder label="Screenshot: Mode bindings panel showing a variable mapped to different tokens per mode (Light and Dark)" />
+
+## When to use them
+
+Use mode bindings for semantic variables - the ones that change meaning per theme. Primitive variables (raw color values like a specific grey) typically use standard mappings since the value is the same regardless of mode.
+
+## Setting up mode bindings
+
+<GuideStep step={1} title="Open the variable's mapping row">
+  In the mapping panel, click the variable you want to bind per mode. At the bottom of the expanded row, look for the Mode Bindings toggle.
+</GuideStep>
+
+<GuideStep step={2} title="Enable mode bindings">
+  Toggle the switch to enable mode bindings for this variable. The row expands to show each mode defined in the variable's collection.
+</GuideStep>
+
+<GuideStep step={3} title="Assign a token to each mode" tip="The token picker filters by type. For a COLOR variable, only color tokens appear in results. This prevents accidentally assigning a dimension token to a color variable.">
+  For each mode (Light, Dark, or whatever modes your collection uses), open the token picker and select the source token for that mode.
+</GuideStep>
+
+<GuideStep step={4} title="Confirm and save">
+  Once all modes are assigned, the variable is fully bound. Save your mappings. On the next sync, TokenNexus applies the correct token value to each mode independently.
+</GuideStep>
+
+## Partial bindings
+
+You do not have to assign all modes at once. A variable with some modes bound and some unbound is considered partial. Partial bindings are valid - the unbound modes are skipped during sync. The mapping panel marks partial bindings visually so you can find and complete them later.

@@ -1,0 +1,176 @@
+---
+layout: ../layouts/DocsLayout.astro
+title: Troubleshooting
+description: Solutions to the most common TokenNexus problems - connection failures, missing files, parse errors, unexpected diffs, and sync issues.
+---
+
+import Callout from '../components/Callout.astro';
+import ImagePlaceholder from '../components/ImagePlaceholder.astro';
+import BeamDivider from '../components/BeamDivider.astro';
+
+# Troubleshooting
+
+Quick links: [Connection Issues](#connection-issues) · [No Files Found](#no-files-found) · [Parsing Errors](#parsing-errors) · [Diffs Look Wrong](#diffs-look-wrong) · [Sync Did Not Apply](#sync-did-not-apply) · [Recovery Guide](#recovery-guide)
+
+---
+
+## Connection Issues
+
+Most connection failures come from one of three places: a wrong PAT scope, a typo in the repository path, or a PAT that has expired. The error message in the plugin panel will usually tell you which category you are in.
+
+<ImagePlaceholder label="Screenshot: Connection error state in the setup panel with error message visible" ratio="16/9" />
+
+### "Authentication failed" or 401
+
+Your PAT is invalid, expired, or does not have access to the repository.
+
+- Check that the PAT was copied in full - GitHub tokens are long and easy to truncate
+- Check the PAT has not expired in your GitHub token settings
+- For organization repos, confirm the PAT has been authorized for SAML SSO if your org requires it
+- Confirm the PAT has `Contents: read` (fine-grained) or `repo` scope (classic)
+
+### "Repository not found" or 404
+
+The repository path is wrong, or the PAT does not have access.
+
+- Use exactly `owner/repo` format - no `https://github.com/` prefix, no trailing slash
+- Confirm the repository exists and has not been transferred or deleted
+- For private repos, confirm the PAT's repository access includes this specific repository
+
+<Callout variant="note">
+  GitHub returns 404 (not found) instead of 403 (forbidden) for private repositories the PAT cannot access. This is GitHub's intentional behavior. If you get a 404 on a repo you know exists, treat it as a permissions issue first.
+</Callout>
+
+### "Branch not found"
+
+The branch name you entered does not exist. Common causes: renamed from `master` to `main`, a feature branch was merged and deleted, or a typo. Verify the branch name directly on GitHub.
+
+### GitHub rate limit exceeded
+
+The GitHub API has rate limits. If you are making frequent syncs or re-fetches in a short window, you may hit the limit. The Settings panel shows your current rate limit remaining. Wait a few minutes and try again - limits reset on a rolling window.
+
+### Network errors and timeouts
+
+If none of the above apply, the issue may be a corporate firewall, proxy, or Figma's plugin network sandbox. Figma restricts plugin network access to domains declared in the plugin manifest. TokenNexus only calls `api.github.com`. If your network blocks that domain, the plugin cannot connect.
+
+---
+
+## No Files Found
+
+When the file browser shows an empty list after a successful connection, the repo scan found no JSON files in the location it checked. This is almost always a path or structure issue.
+
+<ImagePlaceholder label="Screenshot: Empty file browser state with empty-state message" ratio="16/9" />
+
+### Token files are nested deeper than expected
+
+TokenNexus scans the folder path you provide. If your files are at `packages/design-tokens/src/tokens/` and you entered `tokens/`, nothing will show. Use the directory path field to navigate to the exact subdirectory.
+
+### Non-JSON file extensions
+
+TokenNexus only lists `.json` files. If your tokens are in `.jsonc`, `.json5`, or `.ts`, they will not appear. Ensure your repo also exports a plain `.json` version of your tokens.
+
+### Monorepo structure
+
+If your token files live in one package within a monorepo alongside application code, navigate to the specific package folder (e.g. `packages/tokens/src/`) rather than the repository root.
+
+<Callout variant="note">
+  TokenNexus skips `node_modules`, `.git`, `dist`, and `build` directories automatically. Files inside these paths will never appear in the browser.
+</Callout>
+
+---
+
+## Parsing Errors
+
+Parsing errors occur when TokenNexus fetches a file successfully but cannot read its contents - a JSON syntax error, unexpected structure, or an encoding issue.
+
+<ImagePlaceholder label="Screenshot: Parsing error panel showing affected file name and error description" ratio="16/9" />
+
+### JSON syntax errors
+
+The most common cause is a trailing comma (valid in some editors, invalid in standard JSON), an unquoted key, or a comment left in a file. The error message references the character position of the problem. Fix the syntax in the file on GitHub and re-scan.
+
+If your workflow uses `.jsonc` intentionally, ensure your build process produces a plain `.json` output and point TokenNexus at that file instead.
+
+### Unrecognized file structure
+
+If the JSON is valid but contains no token-shaped objects (e.g. a `package.json` or plugin manifest), TokenNexus parses it but finds zero tokens. The file is not useful for mapping - deselect it.
+
+### Recent file started failing
+
+If a file that previously worked begins failing after a commit, check the repository's recent commit history for changes to that file. A syntax error introduced in a recent commit is the most likely cause.
+
+---
+
+## Diffs Look Wrong
+
+If the sync diff shows changes you did not expect, do not apply until you understand why. A wrong mapping is far more likely than a bug in the diff engine.
+
+<ImagePlaceholder label="Screenshot: Diff panel with a suspicious row highlighted and the token source value circled" ratio="16/9" />
+
+### All variables show as changed on the first sync
+
+This is normal. The diff compares current Figma values against the current token values. If the file was created before TokenNexus was installed, the values may never have been aligned. Review each change carefully - this first sync is worth the time.
+
+### A color shows the wrong before/after values
+
+Check the mapping for that variable. The most common cause is a variable mapped to a token with a similar name but in a different category - for example, a background color token mapped to an icon color variable. Open the mapping panel, find the variable, and verify the token path.
+
+<Callout variant="tip">
+  To investigate a suspicious diff row, note the variable name and close the sync modal. Open the mapping panel, find the variable, and verify which token it is mapped to. If the token path is wrong, remap it and re-run the sync.
+</Callout>
+
+### Alias tokens resolving to unexpected values
+
+When your token file uses `{alias.reference}` syntax and the resolved value looks wrong, trace the resolution chain manually by looking at the referenced token in the JSON file. Circular references stop at the last resolvable value.
+
+### Floating point differences
+
+A number token and a Figma float variable can show as different even when they represent the same logical value. This is a rounding artifact. If the difference is less than 0.001, it is safe to apply.
+
+---
+
+## Sync Did Not Apply
+
+When a sync reports success but Figma variables do not appear to have changed, there are three likely explanations.
+
+<ImagePlaceholder label="Screenshot: Sync modal after apply showing confirmation of changes written to Figma" ratio="16/9" />
+
+### Variables were already up to date
+
+If another editor ran the same sync, or you manually updated the variables in Figma between the diff and apply steps, the target values are already present. Re-run the diff to confirm the current state.
+
+### Changes applied to a different mode
+
+If your variables have multiple modes and the sync applied to a mode you were not viewing, the changes are present but not visible. Switch the collection mode in Figma to confirm.
+
+### Figma file is read-only
+
+If the sync history log shows zero variables applied but you clicked Apply, check whether you have editor access to the file. Viewer-only access prevents variable writes. The plugin will not always surface this as an obvious error.
+
+<Callout variant="warning">
+  If you are working in a published library file without edit access, syncs will silently fail to write. Confirm your role in the file before debugging further.
+</Callout>
+
+---
+
+## Recovery Guide
+
+Recovery options depend on how much time has passed and whether the file is still open.
+
+<ImagePlaceholder label="Screenshot: TokenNexus reset panel with mapping export and clear storage options" ratio="16/9" />
+
+### Option 1 - Undo (file still open)
+
+Press `Cmd+Z` (Mac) or `Ctrl+Z` (Windows). TokenNexus groups all writes from a single Apply into one undo transaction - a single undo reverses the entire sync. This only works while the file is still open.
+
+### Option 2 - Re-sync from a historical token state
+
+Find the commit or tag in your token repo that reflects the state your variables should be at. In the TokenNexus setup panel, enter that commit SHA as your branch - GitHub supports this. Run the sync to restore the correct values, then switch back to `main`.
+
+### Option 3 - Clear plugin storage and re-map
+
+If the plugin storage is corrupted or unreadable, use "Clear plugin data" in the Settings panel. This erases all TokenNexus data for the file - mapping, connection settings, and PAT reference. Variable values in Figma are never deleted by this action. You will need to reconnect and re-map from scratch.
+
+<Callout variant="note">
+  If a mapping export was made before the problem occurred, importing it after clearing storage restores the full mapping state without manual re-mapping.
+</Callout>

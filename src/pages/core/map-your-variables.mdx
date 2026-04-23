@@ -1,0 +1,72 @@
+---
+layout: ../../layouts/DocsLayout.astro
+title: Map Your Variables
+description: How to connect Figma variables to design tokens using auto-match and manual mapping.
+---
+
+import Callout from '../../components/Callout.astro';
+import GuideStep from '../../components/GuideStep.astro';
+import ImagePlaceholder from '../../components/ImagePlaceholder.astro';
+import PluginBanner from '../../components/PluginBanner.astro';
+
+# Map Your Variables
+
+Mapping is the step that makes everything else work. For each Figma variable, you are recording which design token it corresponds to. Do it once, and TokenNexus handles the rest.
+
+## Start with auto-match
+
+Auto-match is TokenNexus's algorithm for suggesting mappings based on what it can observe - the variable name, the token name, the current value in Figma, and the value in the token file. It scores each potential pairing and applies or suggests matches based on confidence.
+
+Run it before doing anything manually. On a well-named file, it typically gets 70 to 90 percent of variables right with no input from you. The rest takes minutes rather than hours.
+
+<ImagePlaceholder label="Screenshot: Auto-match running with a progress indicator" ratio="16/9" />
+
+### How confidence works
+
+After auto-match runs, variables fall into three groups:
+
+- **Auto-applied** (score 0.75+): The plugin was confident enough to apply the mapping directly. These appear as confirmed in the mapping panel.
+- **Suggested** (score 0.38-0.74): The plugin found a likely match but wants you to confirm. These appear with a suggestion indicator - one click confirms, one click dismisses.
+- **Unmatched** (score below 0.38): No plausible match found. These need manual assignment.
+
+<Callout variant="tip">
+  The most common reason for a low auto-match rate is a large naming difference between Figma variables and token paths. A variable named `Grey/100` and a token named `color.neutral.100` will score low despite referring to the same thing. In those cases, do a quick manual pass on the suggestions list.
+</Callout>
+
+## Review suggestions
+
+<ImagePlaceholder label="Screenshot: Suggestions panel showing 3 suggested mappings with confirm/dismiss options" />
+
+After auto-match, open the suggestions panel. Each suggestion shows the Figma variable name, the suggested token, and the current values from both sides. If they match what you expect, confirm it. If not, dismiss it and assign manually.
+
+## Manual mapping
+
+For any variable that auto-match missed or got wrong, click the variable row to open its mapping dropdown. The dropdown searches your token files. Type any part of the token path to filter.
+
+<ImagePlaceholder label="Screenshot: Manual mapping dropdown open for a single variable, showing search results" />
+
+<GuideStep step={1} title="Click the variable row">
+  In the mapping panel, click any unmapped variable to expand it. The row opens a token picker below it.
+</GuideStep>
+
+<GuideStep step={2} title="Search for the token" tip="If you are not sure of the exact token path, search by value. Searching a hex color returns all tokens with that color as their value.">
+  Type in the search field. The picker filters by token path. Results show the token path and its current value. For color tokens, a swatch appears next to the value.
+</GuideStep>
+
+<GuideStep step={3} title="Select and confirm">
+  Click the token you want. The variable row updates to show the confirmed mapping. It moves from the unmapped list to the mapped list.
+</GuideStep>
+
+## Saving
+
+Confirmed mappings are held in memory as you work - they are not written to the Figma file until you save. When you are ready, click **Review changes** in the top navigation bar.
+
+The review panel shows every pending mapping and its status - ready to save, broken, or not ready yet. Click **Save changes** to write the ready ones to the file. Anything blocked stays in the queue for you to finish later.
+
+See [Review and Save Mappings](/token-nexus-docs/core/review-and-save) for a full explanation of the review panel and what each status means.
+
+<Callout variant="warning">
+  Mappings are not auto-saved. If you close the plugin or the file before saving, any pending changes that have not been written to the file are lost. Open Review changes and save before closing.
+</Callout>
+
+<PluginBanner variant="compact" />

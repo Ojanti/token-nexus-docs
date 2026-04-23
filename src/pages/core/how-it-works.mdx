@@ -1,0 +1,81 @@
+---
+layout: ../../layouts/DocsLayout.astro
+title: How It Works
+description: The mental model behind TokenNexus - tokens, variables, mappings, and sync, explained plainly.
+---
+
+import Callout from '../../components/Callout.astro';
+import ImagePlaceholder from '../../components/ImagePlaceholder.astro';
+
+# How It Works
+
+Before configuring anything, it helps to understand what TokenNexus is actually doing. This page covers the four concepts the rest of the documentation builds on.
+
+## Design tokens
+
+Design tokens are named design decisions stored as data. Instead of writing a specific hex value wherever you need the primary brand color, you reference a token - a named value that lives in one place and can change without breaking every reference. Tokens are typically stored in JSON files, versioned in Git, and processed by a build tool before reaching the products that consume them.
+
+A token looks like this in DTCG format:
+
+```json
+{
+  "color": {
+    "brand": {
+      "primary": {
+        "$value": "#3B82F6",
+        "$type": "color"
+      }
+    }
+  }
+}
+```
+
+The token's path is `color.brand.primary`. Its value is a hex color. That path and value are what TokenNexus reads from your repository.
+
+## Figma variables
+
+Figma variables are the design tool equivalent of design tokens. They are named values stored in a collection that components and styles can reference. When a variable changes, every component using it updates automatically. Variables support multiple modes, which is how Figma handles light and dark themes in a single file.
+
+A Figma variable named `Color/Brand/Primary` holds the same concept as the token above. But Figma uses a slash separator, while the token uses dots. These two things describe the same design decision in two different syntaxes, enforced by two different tools.
+
+<ImagePlaceholder label="Diagram: Token path structure vs Figma variable naming convention side-by-side" ratio="16/9" />
+
+## The naming gap
+
+This is the core problem. `color.brand.primary` and `Color/Brand/Primary` are the same decision expressed differently. There is no automatic way to match them because the rules governing each naming convention are set by different systems.
+
+Some teams use consistent naming. Many do not. A variable might be `Colors/Primary/500` in Figma and `color.primary` in the token file. They map to the same thing, but no string comparison would figure that out.
+
+<Callout variant="why">
+  This is why TokenNexus requires a mapping step. The mapping is a human decision, recorded once, that says: this variable corresponds to this token. Once saved, TokenNexus uses that record for every future sync. The algorithm can suggest the right answer most of the time, but confirmation is what makes it reliable.
+</Callout>
+
+## Mappings
+
+A mapping is a saved record that connects one Figma variable to one design token. It stores the variable's Figma ID and the token's full path in the repository. It persists in the Figma file so it survives across sessions, plugin reinstalls, and team handoffs (as long as the file is shared).
+
+There are two types:
+
+- **Primitive mappings** connect a variable to one token, regardless of mode.
+- **Semantic mappings** connect a variable to different tokens depending on the active mode - for example, a background color that maps to `color.neutral.100` in light mode and `color.neutral.900` in dark mode.
+
+Mappings are only written to the file when you explicitly click Save. Confirming a mapping in the panel or running auto-match does not save anything. This is intentional - it lets you review the full mapping before committing it.
+
+## Sync
+
+Sync is the process of fetching the latest token values from GitHub, comparing them against your mapped variables, and applying the differences. It is not automatic. You trigger it, review the diff, and choose what to apply.
+
+The sync flow:
+
+```
+1. TokenNexus fetches the token files from GitHub (using your PAT)
+2. It resolves all token references and aliases
+3. It compares each mapped variable's current Figma value against the latest token value
+4. It builds a diff of everything that changed
+5. You review the diff and apply the rows you want
+6. Figma variables update directly
+```
+
+<Callout variant="note">
+  If a token has not changed since your last sync, it does not appear in the diff. The diff only shows variables where the token value is different from what Figma currently holds.
+</Callout>

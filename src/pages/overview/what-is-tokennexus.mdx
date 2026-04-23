@@ -1,0 +1,76 @@
+---
+layout: ../../layouts/DocsLayout.astro
+title: What is TokenNexus
+description: What TokenNexus does, why it exists, and what makes it different from every other token sync tool.
+---
+
+import Callout from '../../components/Callout.astro';
+import ImagePlaceholder from '../../components/ImagePlaceholder.astro';
+import PluginBanner from '../../components/PluginBanner.astro';
+import BeamDivider from '../../components/BeamDivider.astro';
+
+# What is TokenNexus
+
+TokenNexus is a [free Figma plugin](https://www.figma.com/community/plugin/1617061240636708738/tokennexus-for-figma) that keeps your Figma variables aligned with design tokens stored in your GitHub repository.
+
+That sounds like three other tools. Here is what actually sets it apart.
+
+## The problem every design system hits
+
+Your tokens live in GitHub. Your variables live in Figma. They describe the same decisions - but neither system knows the other exists.
+
+When tokens change, Figma has no idea. Someone updates variables by hand. It happens late, inconsistently, or not at all. The longer it goes, the worse the drift.
+
+But the manual update problem is just the start. There are several layers to this:
+
+**Naming conventions are a mess on every side.** The same color might be `color.brand.primary` in your token repo, `Color/Brand/Primary` in one designer's Figma file, and `--color-brand-primary` in the CSS. Dots, slashes, camelCase, Title/Case - no two tools agree. Any sync tool has to somehow bridge these, and most just give up and ask you to rename everything.
+
+**Auto-sync is its own kind of danger.** Some tools sync automatically whenever tokens change. That sounds convenient until a token rename silently breaks 200 variable mappings and no one notices until a designer opens a file before a handoff. You want to know what changed, review it, and choose what to apply - not have it happen in the background.
+
+**Stale files quietly corrupt your process.** When Figma variables drift from the token source, designers work with wrong values. They ship comps with outdated colors. Engineers implement from the comp, not from the token. The disconnect compounds across every release until the design system stops being trustworthy.
+
+**Every tool wants you to migrate to its format.** Most sync tools require you to restructure your token files, rename your Figma collections, or adopt their platform to get the connection working. The price of syncing is changing everything you already have.
+
+<ImagePlaceholder label="Diagram: Token value drifting from GitHub source across multiple Figma files over time" ratio="16/9" />
+
+## How TokenNexus is different
+
+**Intelligent auto-matching:** No other token plugin does this. TokenNexus runs a multi-signal scoring algorithm across variable names, token paths, current values, and data types. A variable called `Color/Brand/Primary` and a token at `color.brand.primary` look nothing alike as strings - but TokenNexus matches them. On most files, 70 to 90 percent of variables are matched before you touch anything.
+
+**Zero renaming. Zero migration.** Your Figma collections stay as they are. Your token files stay in whatever format they're in - DTCG, Tokens Studio, or raw JSON. There is no setup requirement other than having a GitHub repo and a Figma file.
+
+**You review every change before it applies.** Sync shows a diff: what changed, old value, new value. You pick what to apply. Nothing writes to Figma without your sign-off. No silent updates.
+
+**Native multi-mode support.** Light and dark. Brand variants. Density modes. TokenNexus maps each mode to the right token without workarounds or paywalls.
+
+**Generate variables if you're starting fresh.** No variables in Figma yet? Point TokenNexus at your repo and it creates them - collections, modes, mappings all saved - ready to sync immediately.
+
+<ImagePlaceholder label="Screenshot: TokenNexus mapping panel showing auto-matched variables with confidence scores" ratio="16/9" />
+
+## What it is not
+
+- Not a token management tool - manage tokens in your codebase as you do today
+- Not a design system generator - no components, no styles
+- Not a two-way sync - variable changes in Figma do not push back to GitHub
+- Not a hosted platform - runs entirely inside Figma, credentials never leave your machine
+- Not a subscription - free
+
+## Who it is for
+
+**Design system leads** who maintain the bridge between a token repo and Figma. They run syncs before handoffs, after rebrands, before releases.
+
+**Product designers** who work in files that pull from a shared system and need values to stay current without waiting on a manual update from someone else.
+
+**Design-adjacent engineers** who own the token repo and want changes to reach Figma without becoming a task they hand off.
+
+## What you need
+
+- A Figma file with local variables, or an empty file if you plan to generate variables from tokens
+- A GitHub repository with token JSON files in DTCG, Tokens Studio, or raw JSON format
+- A GitHub Personal Access Token with read access to that repository
+
+<Callout variant="note">
+  TokenNexus reads your tokens. It does not write to your GitHub repository. Your PAT is stored in Figma's local plugin storage and is never sent anywhere other than the GitHub API.
+</Callout>
+
+<PluginBanner variant="compact" />

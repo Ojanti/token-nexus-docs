@@ -1,0 +1,69 @@
+---
+layout: ../../layouts/DocsLayout.astro
+title: Team Setup
+description: How mapping storage works in shared files, how to hand off mappings between collaborators, and how to export and import mapping configurations.
+---
+
+import Callout from '../../components/Callout.astro';
+import GuideStep from '../../components/GuideStep.astro';
+
+# Team Setup
+
+TokenNexus mappings live in the Figma file. Any editor can see and modify them. Understanding how storage works prevents surprises when multiple people work with the same plugin.
+
+## How storage works
+
+**Mapping data** is stored in the Figma file itself. It is file-scoped, which means any editor who has access to the Figma file can read, modify, and save the mapping. When you share a file with a teammate, the mapping comes with it.
+
+**GitHub credentials (your PAT)** are stored in Figma's user-scoped plugin storage. They are specific to your machine and your Figma account. A teammate who opens the same file will not inherit your PAT. They need to enter their own credentials.
+
+<Callout variant="warning">
+  Any editor in the file can overwrite the mapping by saving a different state. If you are working with a team, agree on who is the designated mapping owner for each file. That person runs syncs and makes mapping changes.
+</Callout>
+
+## Exporting mappings
+
+Export the mapping from the Settings panel. The export includes the repository URL, branch, selected token files, and every confirmed mapping record. It does not include your GitHub PAT.
+
+Use exports for:
+
+- Backing up a mapping before major changes
+- Handing off a file to a new design system owner
+- Applying a known-good mapping to a duplicate or branched file
+
+### Export to file vs export to GitHub
+
+The Settings panel offers two export methods:
+
+**Export to local file** - Downloads a `.json` file directly to your machine. No GitHub permissions required beyond what you already have.
+
+**Export to GitHub** - Writes the mapping file to your repository. When you choose this method, you can select how the change is applied:
+
+- **Direct commit** - Commits the file straight to the configured branch. Faster, but requires write access to that branch and bypasses any branch protection rules.
+- **Pull request** - Creates a branch and opens a PR. Safer for teams with branch protection or a review process on the token repo.
+
+<Callout variant="tip">
+  If your repository has branch protection on `main` or `master`, use the pull request method. A direct commit to a protected branch will fail.
+</Callout>
+
+## Importing mappings
+
+<GuideStep step={1} title="Open Settings">
+  Click the Settings icon in the top navigation bar.
+</GuideStep>
+
+<GuideStep step={2} title="Click Import Mapping">
+  In the Import section, click the button and select your `.json` mapping file.
+</GuideStep>
+
+<GuideStep step={3} title="Review the import" tip="If you are importing a mapping into a new file - not the original - the variable IDs will not match. The import will create unresolved mappings. Use the mapping panel to reassign them by variable name.">
+  The plugin checks the import against the current file's variables. Variables that match by ID are reconnected automatically. Variables that no longer exist in the file are flagged as stale.
+</GuideStep>
+
+<GuideStep step={4} title="Save after import">
+  The import does not auto-save. The imported mappings land in the review queue as pending changes. Open **Review changes**, verify the status of each mapping, then click **Save changes** to write them to the file.
+</GuideStep>
+
+## Team sync cadence
+
+There is no one right frequency. Design systems that change constantly might sync weekly. More stable systems sync before handoffs, releases, or design reviews. The key is syncing before work that depends on accurate token values - not as an afterthought after the fact.

@@ -1,0 +1,142 @@
+---
+layout: ../layouts/DocsLayout.astro
+title: Reference
+description: Technical reference for token formats, value type compatibility, and privacy policy.
+---
+
+import Callout from '../components/Callout.astro';
+import TypeBadge from '../components/TypeBadge.astro';
+import ImagePlaceholder from '../components/ImagePlaceholder.astro';
+
+# Reference
+
+Quick links: [Token Formats](#token-formats) · [Value Type Compatibility](#value-type-compatibility) · [Privacy & Security](#privacy--security)
+
+---
+
+## Token Formats
+
+TokenNexus reads design tokens from JSON files in your GitHub repository. It supports three formats, all auto-detected.
+
+### DTCG format
+
+The W3C Design Tokens Community Group format. Uses `$value` and `$type` as the standard keys. Recommended.
+
+```json
+{
+  "color": {
+    "brand": {
+      "primary": {
+        "$value": "#3B82F6",
+        "$type": "color"
+      },
+      "secondary": {
+        "$value": "#8B6BF5",
+        "$type": "color"
+      }
+    }
+  }
+}
+```
+
+<Callout variant="note">
+  DTCG is the recommended format. It is the most explicit about types and the most future-proof as the specification matures.
+</Callout>
+
+### Tokens Studio format
+
+Uses `value` and `type` without the `$` prefix. Structure is otherwise similar to DTCG.
+
+```json
+{
+  "color": {
+    "brand": {
+      "primary": {
+        "value": "#3B82F6",
+        "type": "color"
+      }
+    }
+  }
+}
+```
+
+### Raw JSON
+
+Any structured JSON where leaf values are strings or numbers. TokenNexus constructs token paths from the object keys.
+
+```json
+{
+  "colors": {
+    "brandPrimary": "#3B82F6",
+    "brandSecondary": "#8B6BF5"
+  },
+  "spacing": {
+    "base": 16
+  }
+}
+```
+
+<Callout variant="warning">
+  Raw JSON has no type information. TokenNexus infers types from values - hex strings become colors, numbers become floats. This inference is usually correct but occasionally wrong. DTCG or Tokens Studio formats give more reliable results.
+</Callout>
+
+### Token references
+
+DTCG and Tokens Studio support token references using curly brace syntax. TokenNexus resolves these before comparing values. Reference chains up to 10 levels deep are resolved. Circular references stop at the last resolvable value.
+
+```json
+{
+  "color": {
+    "background": {
+      "default": { "$value": "{color.neutral.50}", "$type": "color" }
+    },
+    "neutral": {
+      "50": { "$value": "#FAFAFA", "$type": "color" }
+    }
+  }
+}
+```
+
+---
+
+## Value Type Compatibility
+
+Figma variables have four types: color, number (float), string, and boolean. This table shows how design token types map to them.
+
+<ImagePlaceholder label="Screenshot: TypeBadge examples in the mapping panel showing all four types" ratio="4/1" />
+
+| Token `$type` | Figma Variable Type | Compatible | Notes |
+|---|---|---|---|
+| `color` | Color | Yes | Hex, RGB, HSL, and `oklch()` supported |
+| `number` | Number | Yes | Unitless values only; `px` suffix is stripped |
+| `dimension` | Number | Partial | Numeric value extracted; unit discarded |
+| `string` | String | Yes | Direct pass-through |
+| `boolean` | Boolean | Yes | JSON `true`/`false` maps to Figma boolean |
+| `fontFamily` | String | Yes | Stored as a string variable |
+| `fontWeight` | Number | Yes | Numeric weight only; named weights like `bold` require manual mapping |
+| `duration` | Number | Partial | Millisecond value extracted; `ms` suffix discarded |
+| `cubicBezier` | String | Partial | Stored as a string representation |
+| `shadow` | - | No | Figma has no shadow variable type |
+| `gradient` | - | No | Figma has no gradient variable type |
+
+### <TypeBadge type="COLOR" /> Color values
+
+Hex, RGB, HSL, and `oklch()` are all normalized to the RGBA format the Figma API expects. Alpha values are preserved.
+
+### <TypeBadge type="FLOAT" /> Number and dimension
+
+Number tokens pass through directly. Dimension tokens have their unit stripped - `16px` and the number `16` produce the same Figma variable value.
+
+<Callout variant="warning">
+  If your tokens use `rem` values (e.g. `1rem`), TokenNexus does not convert `rem` to `px`. The raw number `1` is applied. Ensure your token files use the unit system that matches your Figma variable usage.
+</Callout>
+
+### <TypeBadge type="STRING" /> String and <TypeBadge type="BOOLEAN" /> Boolean
+
+Passed through exactly as they appear in the token file. No transformation.
+
+---
+
+## Privacy & Security
+
+Read the full [TokenNexus Privacy Policy](https://ojanti.github.io/tokennexus-plugin/privacy-policy.html).

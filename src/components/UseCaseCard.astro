@@ -1,0 +1,17 @@
+---
+interface Props {
+  number: string;
+  problem: string;
+  outcome: string;
+}
+
+const { number, problem, outcome } = Astro.props;
+---
+
+<div class="use-case-card">
+  <span class="use-case-number">{number}</span>
+  <div class="use-case-content">
+    <div class="use-case-problem">{problem}</div>
+    <div class="use-case-outcome">{outcome}</div>
+  </div>
+</div>

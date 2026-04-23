@@ -1,0 +1,44 @@
+---
+const cards = [
+  {
+    tag: 'Figma Community',
+    title: 'Moja UI Kit & Design System',
+    desc: 'A free, production-ready UI kit with variables, dark mode, and a complete component library.',
+    href: 'https://www.figma.com/community/file/1108679668074690379/moja-ui-ultimate-ui-kit-design-system-variables-darkmode',
+  },
+  {
+    tag: 'Live Showcase',
+    title: 'Moja UI - Cross-platform Design System',
+    desc: 'A live reference implementation of the Moja design system across web, iOS, and Android.',
+    href: 'https://ojanti.github.io/mojaui-showcase/',
+  },
+  {
+    tag: 'Figma Community',
+    title: 'Moja UI Icon Pack',
+    desc: '2000+ free vector icons, flags, and brand logos. One of the largest free icon collections on Figma Community.',
+    href: 'https://www.figma.com/community/file/1123546605475335634/moja-ui-ultimate-icon-pack-2000-free-vector-icons-flags-brand-logos',
+  },
+];
+---
+
+<div>
+  <span class="creator-section-label">More from John (@Ojanti) Itebu</span>
+  <div class="creator-grid">
+    {cards.map((card) => (
+      <a
+        class="creator-card"
+        href={card.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={card.title}
+      >
+        <div class="creator-card-thumb">preview</div>
+        <div class="creator-card-body">
+          <span class="creator-card-tag">{card.tag}</span>
+          <div class="creator-card-title">{card.title}</div>
+          <div class="creator-card-desc">{card.desc}</div>
+        </div>
+      </a>
+    ))}
+  </div>
+</div>

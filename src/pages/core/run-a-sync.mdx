@@ -1,0 +1,87 @@
+---
+layout: ../../layouts/DocsLayout.astro
+title: Run a Sync
+description: How to fetch updated token values from GitHub, review the diff, and apply changes to your Figma variables.
+---
+
+import Callout from '../../components/Callout.astro';
+import GuideStep from '../../components/GuideStep.astro';
+import ImagePlaceholder from '../../components/ImagePlaceholder.astro';
+import PluginBanner from '../../components/PluginBanner.astro';
+
+# Run a Sync
+
+A sync is how token changes in your repository reach your Figma file. It is a deliberate process - you fetch, review, and apply. Nothing changes in Figma until you say so.
+
+<Callout variant="warning">
+  Sync only uses **saved** mappings. If you have pending changes sitting in the review queue, they are not included until you save them. Open **Review changes** and save first if you want new mappings to be part of this sync.
+</Callout>
+
+## Trigger a sync
+
+In the main mapping panel, click the Sync button in the top navigation bar. TokenNexus fetches your selected token files from GitHub, resolves all references and aliases, and compares the resulting values against your mapped variables.
+
+The fetch uses the branch you configured during setup. If you want to sync from a different branch, update the branch setting first.
+
+<ImagePlaceholder label="Screenshot: Sync button in the top navigation bar with a loading state" />
+
+## Read the diff
+
+After fetching, TokenNexus opens the diff modal. Each row represents a mapped variable whose token value has changed since the last sync.
+
+<ImagePlaceholder label="Screenshot: Sync diff modal with 5 rows - showing variable name, token path, before value, after value, and type badge" ratio="16/9" />
+
+Each diff row shows:
+
+- The Figma variable name
+- The token path it is mapped to
+- The current value in Figma (before)
+- The new value from the token file (after)
+- A type badge (COLOR, FLOAT, STRING, BOOLEAN)
+- For color values, swatches for both before and after
+
+### Row types
+
+Three kinds of rows appear in the diff:
+
+- **Changed**: The token value is different from what Figma currently holds. These are the rows you are here for.
+- **Warning**: The mapping exists but the token no longer exists in the file, or the value type changed in a way that cannot be applied. Review these carefully.
+- If the diff is empty, all your mapped variables already match their source tokens. There is nothing to apply.
+
+<Callout variant="tip">
+  The diff modal has a search field. Filter by variable name, token path, or mode label to find specific rows quickly - useful on large files with hundreds of changes.
+</Callout>
+
+## Select what to apply
+
+All rows are selected by default. Deselect any rows you want to skip. Rows you deselect are not applied in this sync but will appear again in the next one if the token value is still different.
+
+<Callout variant="note">
+  Deselecting a row does not dismiss it permanently. If you want to stop a variable from appearing in future diffs, you need to update the mapping or remove it.
+</Callout>
+
+<ImagePlaceholder label="Screenshot: Diff modal with two rows deselected, apply button showing the count of changes to be applied" />
+
+## Apply changes
+
+<GuideStep step={1} title="Click Apply Changes">
+  The button shows how many rows are selected. Click it to write the new values to your Figma variables. For most syncs, this takes under a second.
+</GuideStep>
+
+<GuideStep step={2} title="Verify in Figma" tip="If something looks wrong after applying, Cmd+Z reverses the entire sync as a single undo step. Use it before closing the file.">
+  After applying, close the diff modal. Check a few affected components in your canvas to confirm the values look right. Figma variables update live, so any component referencing an updated variable reflects the change immediately.
+</GuideStep>
+
+<GuideStep step={3} title="Save your Figma file">
+  Variable changes are written to the file immediately when you apply, but the file itself needs to be saved. Use Cmd+S (Mac) or Ctrl+S (Windows) as you normally would after any significant change.
+</GuideStep>
+
+<Callout variant="tip">
+  If something looks wrong after applying, Cmd+Z reverses the entire sync as a single undo step - but only while the file is still open. Save your file once you are happy with the result.
+</Callout>
+
+## When nothing changes
+
+If all your mapped variables already match their source tokens, the diff is empty and a message confirms that the file is up to date. This is the expected state after a clean sync. Run a sync again whenever you expect the token repository to have changed.
+
+<PluginBanner variant="compact" />

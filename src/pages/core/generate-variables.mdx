@@ -1,0 +1,86 @@
+---
+layout: ../../layouts/DocsLayout.astro
+title: Generate Variables from Tokens
+description: How to create Figma variable collections, modes, and mappings directly from your GitHub token repo in one step.
+---
+
+import Callout from '../../components/Callout.astro';
+import GuideStep from '../../components/GuideStep.astro';
+import ImagePlaceholder from '../../components/ImagePlaceholder.astro';
+import PluginBanner from '../../components/PluginBanner.astro';
+
+# Generate Variables from Tokens
+
+If you have tokens in a GitHub repository but no Figma variables yet, you do not need to create them by hand. TokenNexus reads your token files, plans how to organize them into collections and modes, creates the variables, and maps them back to their source tokens - all in one step.
+
+## When to use this
+
+- You are starting a new design file and want it connected to your token repo from day one
+- You have tokens but the Figma file has no variables yet
+- You want a clean set of generated primitives and semantic variables matched to a well-structured repo
+
+<Callout variant="note">
+  Generate Variables is non-destructive. If the file already has some variables and mappings, the wizard detects them and reuses any existing work. It will not overwrite mappings you have already set up.
+</Callout>
+
+## How to launch
+
+Open the plugin in your Figma file. If no variable collections exist yet, the mapping panel shows a **Create variables from git** button. Click it to launch the wizard.
+
+If you already have collections but want to generate more, access the wizard from the **Generate** option in the top navigation bar.
+
+<ImagePlaceholder label="Screenshot: Empty mapping panel with the 'Create variables from git' button" ratio="16/9" />
+
+## What the wizard does
+
+<GuideStep step={1} title="Connect to your repository">
+  Enter your GitHub repository, Personal Access Token, folder path, and branch. If the plugin is already connected, this step is pre-filled.
+</GuideStep>
+
+<GuideStep step={2} title="Select your token files">
+  The wizard lists every JSON file in the folder. Select the files that define your tokens. Leave out generated output files, config files, or anything that is not a token source.
+
+  <ImagePlaceholder label="Screenshot: Token file selection step in the Generate Variables wizard" />
+</GuideStep>
+
+<GuideStep step={3} title="Review the generation plan">
+  Before creating anything, the wizard shows a plan:
+
+  - How many collections will be created
+  - What modes will be set up (the wizard infers modes from your file structure - for example, a `light` and `dark` folder become two modes in the same collection)
+  - How many variables will be created vs reused from what already exists
+
+  Nothing is written to Figma until you confirm.
+
+  <ImagePlaceholder label="Screenshot: Generation plan preview showing collections, modes, and variable count" />
+</GuideStep>
+
+<GuideStep step={4} title="Generate">
+  Click **Generate**. The wizard creates variable collections, modes, and variables, then builds the initial mappings. A progress bar shows which phase is running.
+
+  <ImagePlaceholder label="Screenshot: Generation progress bar with active phase label and completion percentage" />
+</GuideStep>
+
+<GuideStep step={5} title="Review and save">
+  After generation, all created mappings land in the review queue as pending changes. Click **Review changes** to inspect what was created, then **Save changes** to write everything to the file.
+
+  See [Review and Save Mappings](/token-nexus-docs/core/review-and-save) for the full walkthrough.
+</GuideStep>
+
+## Primitive and semantic variables
+
+When your token repo has a two-tier structure - raw values in one layer, references to those values in another - the wizard creates two kinds of variables:
+
+**Primitive variables** hold raw values directly from the token file. A primitive for `color.blue.500` stores `#3B82F6` as its value.
+
+**Semantic variables** are mapped to tokens that reference primitives rather than holding values directly. In Figma, these become alias variables - they point to a primitive variable rather than storing their own value. This preserves the alias structure from your token file inside Figma.
+
+<Callout variant="tip">
+  If your tokens only have one tier - no alias references - the wizard creates primitive-style variables only. You can always add semantic bindings manually from the mapping panel later.
+</Callout>
+
+## After generation
+
+Once you save the mappings, your variables are wired to their tokens and ready to sync. Whenever the token values in your repository change, run a sync to pull those changes into Figma. See [Run a Sync](/token-nexus-docs/core/run-a-sync).
+
+<PluginBanner variant="compact" />

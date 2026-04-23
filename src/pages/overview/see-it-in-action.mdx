@@ -1,0 +1,55 @@
+---
+layout: ../../layouts/DocsLayout.astro
+title: See It In Action
+description: Video walkthroughs and screenshots of the full TokenNexus workflow - repo connection, variable mapping, and running a sync.
+---
+
+import VideoPlaceholder from '../../components/VideoPlaceholder.astro';
+import ImagePlaceholder from '../../components/ImagePlaceholder.astro';
+import PluginBanner from '../../components/PluginBanner.astro';
+
+# See It In Action
+
+The best way to understand TokenNexus is to watch a file get wired up from scratch. The videos below walk through the three phases of the workflow - connecting a repository, mapping variables, and running your first sync.
+
+## The full workflow (6 minutes)
+
+<VideoPlaceholder
+  label="Video: Complete TokenNexus workflow - repo connection to first sync"
+  caption="This walkthrough covers a realistic setup with 40 variables, auto-match running to ~80% coverage, and a sync that applies 12 changes."
+/>
+
+## Connecting to GitHub (2 minutes)
+
+<VideoPlaceholder
+  label="Video: GitHub connection and PAT setup"
+  caption="How to generate a Personal Access Token, connect your repository, and select your token files."
+/>
+
+The connection process takes about 90 seconds. You need a repository URL, a GitHub PAT, and the folder path where your token files live.
+
+## How mapping works (3 minutes)
+
+<VideoPlaceholder
+  label="Video: Mapping variables using auto-match and manual review"
+  caption="Auto-match suggestions, how to read confidence indicators, and how to manually map variables the algorithm missed."
+/>
+
+Auto-match handles most variables in large files. For anything it misses or gets wrong, the manual dropdown is one click away.
+
+## Running a sync
+
+<VideoPlaceholder
+  label="Video: Full sync walkthrough - diff review to applied changes"
+  caption="Reading the diff, deselecting rows you want to skip, and applying changes selectively."
+/>
+
+## Screenshots
+
+<ImagePlaceholder label="Screenshot: Welcome screen and onboarding wizard" ratio="16/9" />
+
+<ImagePlaceholder label="Screenshot: Mapping panel with auto-match suggestions highlighted" ratio="16/9" />
+
+<ImagePlaceholder label="Screenshot: Sync diff modal showing before/after values with color swatches" ratio="16/9" />
+
+<PluginBanner variant="full" />
