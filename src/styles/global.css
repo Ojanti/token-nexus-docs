@@ -424,18 +424,6 @@ tbody tr:hover {
   gap: 16px;
 }
 
-.topbar-github-link {
-  display: flex;
-  align-items: center;
-  color: var(--text-secondary);
-  transition: color 150ms ease;
-}
-
-.topbar-github-link:hover {
-  color: var(--text-primary);
-  text-decoration: none;
-}
-
 .topbar-cta {
   display: inline-flex;
   align-items: center;

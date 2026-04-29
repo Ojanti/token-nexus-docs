@@ -5,12 +5,11 @@ description: Solutions to the most common TokenNexus problems - connection failu
 ---
 
 import Callout from '../components/Callout.astro';
-import ImagePlaceholder from '../components/ImagePlaceholder.astro';
 import BeamDivider from '../components/BeamDivider.astro';
 
 # Troubleshooting
 
-Quick links: [Connection Issues](#connection-issues) · [No Files Found](#no-files-found) · [Parsing Errors](#parsing-errors) · [Diffs Look Wrong](#diffs-look-wrong) · [Sync Did Not Apply](#sync-did-not-apply) · [Recovery Guide](#recovery-guide)
+Quick links: [Connection Issues](#connection-issues) · [No Files Found](#no-files-found) · [Parsing Errors](#parsing-errors) · [Diffs Look Wrong](#diffs-look-wrong) · [Drift and manual Figma edits](#drift-and-manual-figma-edits) · [Sync Did Not Apply](#sync-did-not-apply) · [Recovery Guide](#recovery-guide)
 
 ---
 
@@ -18,20 +17,18 @@ Quick links: [Connection Issues](#connection-issues) · [No Files Found](#no-fil
 
 Most connection failures come from one of three places: a wrong PAT scope, a typo in the repository path, or a PAT that has expired. The error message in the plugin panel will usually tell you which category you are in.
 
-<ImagePlaceholder label="Screenshot: Connection error state in the setup panel with error message visible" ratio="16/9" />
+### 401 / invalid token
 
-### "Authentication failed" or 401
-
-Your PAT is invalid, expired, or does not have access to the repository.
+The plugin surfaces a clear error (for example, that your access token is invalid or expired). Your PAT may not have access to the repository.
 
 - Check that the PAT was copied in full - GitHub tokens are long and easy to truncate
 - Check the PAT has not expired in your GitHub token settings
 - For organization repos, confirm the PAT has been authorized for SAML SSO if your org requires it
 - Confirm the PAT has `Contents: read` (fine-grained) or `repo` scope (classic)
 
-### "Repository not found" or 404
+### "Repository, branch, or token path not found" (404)
 
-The repository path is wrong, or the PAT does not have access.
+The repository path is wrong, the branch or folder path is mistyped, or the PAT does not have access. The plugin may surface the path-not-found message from GitHub’s API in plain language.
 
 - Use exactly `owner/repo` format - no `https://github.com/` prefix, no trailing slash
 - Confirm the repository exists and has not been transferred or deleted
@@ -59,8 +56,6 @@ If none of the above apply, the issue may be a corporate firewall, proxy, or Fig
 
 When the file browser shows an empty list after a successful connection, the repo scan found no JSON files in the location it checked. This is almost always a path or structure issue.
 
-<ImagePlaceholder label="Screenshot: Empty file browser state with empty-state message" ratio="16/9" />
-
 ### Token files are nested deeper than expected
 
 TokenNexus scans the folder path you provide. If your files are at `packages/design-tokens/src/tokens/` and you entered `tokens/`, nothing will show. Use the directory path field to navigate to the exact subdirectory.
@@ -74,7 +69,7 @@ TokenNexus only lists `.json` files. If your tokens are in `.jsonc`, `.json5`, o
 If your token files live in one package within a monorepo alongside application code, navigate to the specific package folder (e.g. `packages/tokens/src/`) rather than the repository root.
 
 <Callout variant="note">
-  TokenNexus skips `node_modules`, `.git`, `dist`, and `build` directories automatically. Files inside these paths will never appear in the browser.
+  The scan lists every `.json` file under the folder path you configure, including nested subfolders. It does not automatically ignore `node_modules` or other large trees—point the path at your token package (for example `packages/tokens/src`) so you are not scanning the whole repo.
 </Callout>
 
 ---
@@ -82,8 +77,6 @@ If your token files live in one package within a monorepo alongside application 
 ## Parsing Errors
 
 Parsing errors occur when TokenNexus fetches a file successfully but cannot read its contents - a JSON syntax error, unexpected structure, or an encoding issue.
-
-<ImagePlaceholder label="Screenshot: Parsing error panel showing affected file name and error description" ratio="16/9" />
 
 ### JSON syntax errors
 
@@ -105,7 +98,13 @@ If a file that previously worked begins failing after a commit, check the reposi
 
 If the sync diff shows changes you did not expect, do not apply until you understand why. A wrong mapping is far more likely than a bug in the diff engine.
 
-<ImagePlaceholder label="Screenshot: Diff panel with a suspicious row highlighted and the token source value circled" ratio="16/9" />
+### I changed repo settings but still see old tokens or old diffs
+
+This is usually expected, not corruption. TokenNexus keeps the **last successful token session** loaded until you explicitly fetch or reload from the new source.
+
+- Open **Sync** and click **Fetch GitHub updates** to switch the sync session to the saved repo settings
+- Or use **Rescan source** / reconnect file selection to reload the mapping workspace from the new source
+- If the fetch fails, the last good session stays visible so you do not lose mapping context
 
 ### All variables show as changed on the first sync
 
@@ -129,11 +128,21 @@ A number token and a Figma float variable can show as different even when they r
 
 ---
 
+## Drift and manual Figma edits
+
+Changing a variable **in Figma by hand** does not change your **saved mapping**. TokenNexus still points that variable at the same token path - so the plugin may show **drift**: the value in the file no longer matches what the token would produce.
+
+- Use the **Drift** filter on the mapping list to find variables in that state, or look for drift indicators on rows and in the collection list.
+- Open **Sync** to see a per-variable diff and apply token values when you are ready.
+- **Stale** is different: that means the mapped **token path** is missing from the loaded token files. Fix the mapping from the variable’s dropdown, then re-scan or refresh as needed.
+
+If you expected TokenNexus to “notice” a manual Figma edit automatically, it will not - by design, sync is review-first. Drift exists so you can see the mismatch and decide in Sync.
+
+---
+
 ## Sync Did Not Apply
 
 When a sync reports success but Figma variables do not appear to have changed, there are three likely explanations.
-
-<ImagePlaceholder label="Screenshot: Sync modal after apply showing confirmation of changes written to Figma" ratio="16/9" />
 
 ### Variables were already up to date
 
@@ -157,8 +166,6 @@ If the sync history log shows zero variables applied but you clicked Apply, chec
 
 Recovery options depend on how much time has passed and whether the file is still open.
 
-<ImagePlaceholder label="Screenshot: TokenNexus reset panel with mapping export and clear storage options" ratio="16/9" />
-
 ### Option 1 - Undo (file still open)
 
 Press `Cmd+Z` (Mac) or `Ctrl+Z` (Windows). TokenNexus groups all writes from a single Apply into one undo transaction - a single undo reverses the entire sync. This only works while the file is still open.
@@ -167,9 +174,9 @@ Press `Cmd+Z` (Mac) or `Ctrl+Z` (Windows). TokenNexus groups all writes from a s
 
 Find the commit or tag in your token repo that reflects the state your variables should be at. In the TokenNexus setup panel, enter that commit SHA as your branch - GitHub supports this. Run the sync to restore the correct values, then switch back to `main`.
 
-### Option 3 - Clear plugin storage and re-map
+### Option 3 - Reset plugin data and re-map
 
-If the plugin storage is corrupted or unreadable, use "Clear plugin data" in the Settings panel. This erases all TokenNexus data for the file - mapping, connection settings, and PAT reference. Variable values in Figma are never deleted by this action. You will need to reconnect and re-map from scratch.
+If the plugin storage is corrupted or unreadable, use **Reset plugin** in **Settings** (Data management / Reset). This removes the saved GitHub connection, mappings, scanned token files, and sync cache for this Figma file. It does not delete Figma variables or your GitHub repo. You will need to reconnect and re-map from scratch.
 
 <Callout variant="note">
   If a mapping export was made before the problem occurred, importing it after clearing storage restores the full mapping state without manual re-mapping.

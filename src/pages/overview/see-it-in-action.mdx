@@ -10,46 +10,30 @@ import PluginBanner from '../../components/PluginBanner.astro';
 
 # See It In Action
 
-The best way to understand TokenNexus is to watch a file get wired up from scratch. The videos below walk through the three phases of the workflow - connecting a repository, mapping variables, and running your first sync.
+The best way to understand TokenNexus is to watch the real workflow play out. The videos below cover setup, variable generation, auto-map, and sync.
 
-## The full workflow (6 minutes)
+## New setup + create variables from git
 
 <VideoPlaceholder
-  label="Video: Complete TokenNexus workflow - repo connection to first sync"
-  caption="This walkthrough covers a realistic setup with 40 variables, auto-match running to ~80% coverage, and a sync that applies 12 changes."
+  label="Video: New setup and create variables from git"
+  caption="Connect a fresh file to GitHub, load token files, and generate the first collections, modes, and variables from the repo."
+  src="/token-nexus-docs/videos/tokennexus_new_setup_create_variables_from-git_r.mp4"
 />
 
-## Connecting to GitHub (2 minutes)
+## Auto-map + sync flow
 
 <VideoPlaceholder
-  label="Video: GitHub connection and PAT setup"
-  caption="How to generate a Personal Access Token, connect your repository, and select your token files."
-/>
-
-The connection process takes about 90 seconds. You need a repository URL, a GitHub PAT, and the folder path where your token files live.
-
-## How mapping works (3 minutes)
-
-<VideoPlaceholder
-  label="Video: Mapping variables using auto-match and manual review"
-  caption="Auto-match suggestions, how to read confidence indicators, and how to manually map variables the algorithm missed."
-/>
-
-Auto-match handles most variables in large files. For anything it misses or gets wrong, the manual dropdown is one click away.
-
-## Running a sync
-
-<VideoPlaceholder
-  label="Video: Full sync walkthrough - diff review to applied changes"
-  caption="Reading the diff, deselecting rows you want to skip, and applying changes selectively."
+  label="Video: Auto-map flow and sync flow"
+  caption="See auto-map establish coverage, review the mapped results, then fetch GitHub updates and apply a sync diff."
+  src="/token-nexus-docs/videos/tokennexus_automap_sync.mp4"
 />
 
 ## Screenshots
 
-<ImagePlaceholder label="Screenshot: Welcome screen and onboarding wizard" ratio="16/9" />
+<ImagePlaceholder label="Screenshot: Welcome screen and onboarding wizard" src="/token-nexus-docs/images/overview/welcome-wizard.png" ratio="16/9" />
 
-<ImagePlaceholder label="Screenshot: Mapping panel with auto-match suggestions highlighted" ratio="16/9" />
+<ImagePlaceholder label="Screenshot: Mapping panel with auto-match suggestions highlighted" src="/token-nexus-docs/images/overview/mapping-automatch.png" ratio="16/9" />
 
-<ImagePlaceholder label="Screenshot: Sync diff modal showing before/after values with color swatches" ratio="16/9" />
+<ImagePlaceholder label="Screenshot: Sync diff modal showing before/after values with color swatches" src="/token-nexus-docs/images/core/sync-02-diff-modal.png" ratio="16/9" />
 
 <PluginBanner variant="full" />

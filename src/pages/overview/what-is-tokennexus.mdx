@@ -31,8 +31,6 @@ But the manual update problem is just the start. There are several layers to thi
 
 **Every tool wants you to migrate to its format.** Most sync tools require you to restructure your token files, rename your Figma collections, or adopt their platform to get the connection working. The price of syncing is changing everything you already have.
 
-<ImagePlaceholder label="Diagram: Token value drifting from GitHub source across multiple Figma files over time" ratio="16/9" />
-
 ## How TokenNexus is different
 
 **Intelligent auto-matching:** No other token plugin does this. TokenNexus runs a multi-signal scoring algorithm across variable names, token paths, current values, and data types. A variable called `Color/Brand/Primary` and a token at `color.brand.primary` look nothing alike as strings - but TokenNexus matches them. On most files, 70 to 90 percent of variables are matched before you touch anything.
@@ -45,7 +43,7 @@ But the manual update problem is just the start. There are several layers to thi
 
 **Generate variables if you're starting fresh.** No variables in Figma yet? Point TokenNexus at your repo and it creates them - collections, modes, mappings all saved - ready to sync immediately.
 
-<ImagePlaceholder label="Screenshot: TokenNexus mapping panel showing auto-matched variables with confidence scores" ratio="16/9" />
+<ImagePlaceholder label="Screenshot: TokenNexus mapping panel showing auto-matched variables with confidence scores" src="/token-nexus-docs/images/core/map-01-automatch.png" ratio="16/9" />
 
 ## What it is not
 
@@ -70,7 +68,7 @@ But the manual update problem is just the start. There are several layers to thi
 - A GitHub Personal Access Token with read access to that repository
 
 <Callout variant="note">
-  TokenNexus reads your tokens. It does not write to your GitHub repository. Your PAT is stored in Figma's local plugin storage and is never sent anywhere other than the GitHub API.
+  **Syncing tokens:** TokenNexus pulls token files from your repo and does not change those files in GitHub as part of a normal sync. **Optional export:** Settings can also push a mapping file to the repository; that is a separate action and may require a PAT with write access. Your PAT is stored in Figma's local plugin storage and is only used to talk to the GitHub API.
 </Callout>
 
 <PluginBanner variant="compact" />

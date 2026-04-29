@@ -29,7 +29,7 @@ Open the plugin in your Figma file. If no variable collections exist yet, the ma
 
 If you already have collections but want to generate more, access the wizard from the **Generate** option in the top navigation bar.
 
-<ImagePlaceholder label="Screenshot: Empty mapping panel with the 'Create variables from git' button" ratio="16/9" />
+<ImagePlaceholder label="Screenshot: Empty mapping panel with the 'Create variables from git' button" src="/token-nexus-docs/images/core/generate-01-empty-state.png" ratio="16/9" />
 
 ## What the wizard does
 
@@ -40,7 +40,7 @@ If you already have collections but want to generate more, access the wizard fro
 <GuideStep step={2} title="Select your token files">
   The wizard lists every JSON file in the folder. Select the files that define your tokens. Leave out generated output files, config files, or anything that is not a token source.
 
-  <ImagePlaceholder label="Screenshot: Token file selection step in the Generate Variables wizard" />
+  <ImagePlaceholder label="Screenshot: Token file selection step in the Generate Variables wizard" src="/token-nexus-docs/images/core/generate-02-file-select.png" />
 </GuideStep>
 
 <GuideStep step={3} title="Review the generation plan">
@@ -52,13 +52,13 @@ If you already have collections but want to generate more, access the wizard fro
 
   Nothing is written to Figma until you confirm.
 
-  <ImagePlaceholder label="Screenshot: Generation plan preview showing collections, modes, and variable count" />
+  <ImagePlaceholder label="Screenshot: Generation plan preview showing collections, modes, and variable count" src="/token-nexus-docs/images/core/generate-03-plan-preview.png" />
 </GuideStep>
 
 <GuideStep step={4} title="Generate">
   Click **Generate**. The wizard creates variable collections, modes, and variables, then builds the initial mappings. A progress bar shows which phase is running.
 
-  <ImagePlaceholder label="Screenshot: Generation progress bar with active phase label and completion percentage" />
+  <ImagePlaceholder label="Screenshot: Generation progress bar with active phase label and completion percentage" src="/token-nexus-docs/images/core/generate-04-progress.png" />
 </GuideStep>
 
 <GuideStep step={5} title="Review and save">
@@ -73,7 +73,7 @@ When your token repo has a two-tier structure - raw values in one layer, referen
 
 **Primitive variables** hold raw values directly from the token file. A primitive for `color.blue.500` stores `#3B82F6` as its value.
 
-**Semantic variables** are mapped to tokens that reference primitives rather than holding values directly. In Figma, these become alias variables - they point to a primitive variable rather than storing their own value. This preserves the alias structure from your token file inside Figma.
+**Semantic variables** are mapped to source tokens that reference primitives rather than holding values directly. During sync, TokenNexus resolves the primitive dependency behind that source token and preserves the alias structure in Figma whenever the matching primitive variable exists.
 
 <Callout variant="tip">
   If your tokens only have one tier - no alias references - the wizard creates primitive-style variables only. You can always add semantic bindings manually from the mapping panel later.

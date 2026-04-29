@@ -10,24 +10,37 @@ interface Props {
 
 const { label, src, alt, ratio = '16/9', height, caption } = Astro.props;
 
-const sizeStyle = height
+const withBase = (value?: string) => {
+  if (!value) {
+    return undefined;
+  }
+  if (/^(https?:)?\/\//.test(value) || value.startsWith('data:')) {
+    return value;
+  }
+
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  const normalizedValue = value.replace(/^\/token-nexus-docs/, '').replace(/^\/+/, '/');
+  return `${base}${normalizedValue}`;
+};
+
+const placeholderStyle = height
   ? `height: ${height}px; aspect-ratio: unset;`
   : `aspect-ratio: ${ratio};`;
 
 const resolvedAlt = alt ?? label;
+
+const resolvedSrc = withBase(src);
 ---
 
-{src ? (
+{resolvedSrc ? (
   <figure class="doc-image">
-    <div class="doc-image-frame" style={sizeStyle}>
-      <img src={src} alt={resolvedAlt} loading="lazy" />
-    </div>
+    <img src={resolvedSrc} alt={resolvedAlt} loading="lazy" />
     {caption && <figcaption>{caption}</figcaption>}
   </figure>
 ) : (
   <div
     class="img-placeholder"
-    style={sizeStyle}
+    style={placeholderStyle}
     aria-label={label}
     role="img"
   >
@@ -38,20 +51,15 @@ const resolvedAlt = alt ?? label;
 <style>
   .doc-image {
     margin: 1.5rem 0;
-  }
-
-  .doc-image-frame {
     background: var(--bg-surface-1);
     border: 1px solid var(--border-subtle);
     border-radius: 8px;
     overflow: hidden;
-    width: 100%;
   }
 
-  .doc-image-frame img {
+  .doc-image img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
     display: block;
   }
 
@@ -60,7 +68,7 @@ const resolvedAlt = alt ?? label;
     font-size: 12px;
     font-style: italic;
     color: var(--text-muted);
-    margin-top: 8px;
-    padding: 0 4px;
+    padding: 8px 12px;
+    border-top: 1px solid var(--border-subtle);
   }
 </style>

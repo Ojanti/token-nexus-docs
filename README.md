@@ -1,6 +1,6 @@
 # TokenNexus Docs
 
-Documentation site for [TokenNexus](https://www.figma.com/community) - the Figma plugin that connects GitHub-hosted design tokens to Figma variables.
+Documentation site for [TokenNexus](https://www.figma.com/community/plugin/1617061240636708738/tokennexus-for-figma) - the Figma plugin that connects GitHub-hosted design tokens to Figma variables.
 
 **Live site:** [ojanti.github.io/token-nexus-docs](https://ojanti.github.io/token-nexus-docs)
 
@@ -33,7 +33,7 @@ Output goes to `dist/`. Deployed automatically on push to `main`.
 
 ```text
 src/
-  components/   Astro UI components (Callout, CodeBlock, BeamDiagram, etc.)
+  components/   Shared Astro components (Callout, Sidebar, layouts pieces, etc.)
   layouts/      DocsLayout - the three-column shell
   pages/        One MDX file per docs page
   styles/       global.css - all design tokens and layout

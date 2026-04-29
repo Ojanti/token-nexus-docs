@@ -33,7 +33,7 @@ Get from a fresh plugin install to a working sync. Two paths depending on where 
 <GuideStep step={1} title="Install TokenNexus" tip="The plugin runs in the context of the file you have open. If you switch files, reopen it from Plugins - TokenNexus.">
   Open Figma and go to the Community panel. Search for **TokenNexus** or [visit the plugin page directly](https://www.figma.com/community/plugin/1617061240636708738/tokennexus-for-figma). Click Install or Open with. Once installed, open the file you want to connect and launch the plugin from Plugins - TokenNexus.
 
-  <ImagePlaceholder label="Screenshot: Figma Community page showing the TokenNexus plugin install button" />
+  <ImagePlaceholder label="Screenshot: Figma Community page showing the TokenNexus plugin install button" src="/token-nexus-docs/images/quickstart/01-install.png" />
 </GuideStep>
 
 <GuideStep step={2} title="Connect your GitHub repository">
@@ -43,13 +43,13 @@ Get from a fresh plugin install to a working sync. Two paths depending on where 
     Not sure where to get a GitHub Personal Access Token? [GitHub's guide to creating a personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) walks through it step by step. You need read access to the repository - nothing more.
   </Callout>
 
-  <ImagePlaceholder label="Screenshot: TokenNexus setup wizard showing the repo connection form" />
+  <ImagePlaceholder label="Screenshot: TokenNexus setup wizard showing the repo connection form" src="/token-nexus-docs/images/core/connect-02-setup-wizard.png" />
 </GuideStep>
 
 <GuideStep step={3} title="Select your token files" tip="If no files appear, the folder path is wrong. Check your repository structure and make sure the path matches exactly, including any trailing slashes.">
   TokenNexus scans the folder and lists every JSON file it finds. Select the files that are your token sources. Skip generated output files, config files, or anything that is not a token definition.
 
-  <ImagePlaceholder label="Screenshot: Token file selection screen showing a list of JSON files" />
+  <ImagePlaceholder label="Screenshot: Token file selection screen showing a list of JSON files" src="/token-nexus-docs/images/quickstart/03-file-selection.png" />
 </GuideStep>
 
 <Callout variant="note">
@@ -61,7 +61,7 @@ Get from a fresh plugin install to a working sync. Two paths depending on where 
 
   On a well-structured file, expect 70 to 90 percent of variables matched before you touch anything.
 
-  <ImagePlaceholder label="Screenshot: Mapping panel after auto-match - showing matched variables, suggestions, and unmatched list" />
+  <ImagePlaceholder label="Screenshot: Mapping panel after auto-match - showing matched variables, suggestions, and unmatched list" src="/token-nexus-docs/images/quickstart/04-automatch-results.png" />
 </GuideStep>
 
 <GuideStep step={5} title="Review suggestions and map the rest">
@@ -70,16 +70,16 @@ Get from a fresh plugin install to a working sync. Two paths depending on where 
   For any unmatched variable, click its row and search for the token by name or value.
 
   <Callout variant="warning">
-    **Save before you move on.** Mappings are held in memory as you work - they are not written to the file until you click Save. If you close the plugin or the file before saving, your work is gone. Click **Save** in the top bar now.
+    **Save before you move on.** Mappings are held in memory as you work - they are not written to the file until you save them from **Review mappings**. If you close the plugin or the file before saving, your work is gone.
   </Callout>
 
-  <ImagePlaceholder label="Screenshot: Suggestions panel with confirm and dismiss actions on each suggestion" />
+  <ImagePlaceholder label="Screenshot: Suggestions panel with confirm and dismiss actions on each suggestion" src="/token-nexus-docs/images/quickstart/05-suggestions.png" />
 </GuideStep>
 
 <GuideStep step={6} title="Run your first sync" tip="On a fresh mapping, most variables show as Changed - that is expected. TokenNexus is comparing Figma's current values against the token values for the first time. Review and apply.">
-  Click the **Sync** button. TokenNexus fetches the latest values from GitHub, compares them against your mapped variables, and shows you a diff. Each row shows the variable, the token it maps to, and the before/after values. Select what you want to apply and click **Apply Changes**.
+  Click the **Sync** button, then **Fetch GitHub updates**. TokenNexus compares the latest repo values against your mapped variables and shows you a diff. Each row shows the variable, the token it maps to, and the before/after values. Select what you want to apply and click **Apply selected**.
 
-  <ImagePlaceholder label="Screenshot: Sync diff modal showing before and after values for three variables" />
+  <ImagePlaceholder label="Screenshot: Sync diff modal showing before and after values for three variables" src="/token-nexus-docs/images/core/sync-02-diff-modal.png" />
 </GuideStep>
 
 <Callout variant="why">

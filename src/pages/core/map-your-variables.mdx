@@ -19,7 +19,7 @@ Auto-match is TokenNexus's algorithm for suggesting mappings based on what it ca
 
 Run it before doing anything manually. On a well-named file, it typically gets 70 to 90 percent of variables right with no input from you. The rest takes minutes rather than hours.
 
-<ImagePlaceholder label="Screenshot: Auto-match running with a progress indicator" ratio="16/9" />
+<ImagePlaceholder label="Screenshot: Auto-match running with a progress indicator" src="/token-nexus-docs/images/core/map-01-automatch.png" ratio="16/9" />
 
 ### How confidence works
 
@@ -35,15 +35,19 @@ After auto-match runs, variables fall into three groups:
 
 ## Review suggestions
 
-<ImagePlaceholder label="Screenshot: Suggestions panel showing 3 suggested mappings with confirm/dismiss options" />
+<ImagePlaceholder label="Screenshot: Suggestions panel showing 3 suggested mappings with confirm/dismiss options" src="/token-nexus-docs/images/core/map-02-suggestions.png" />
 
 After auto-match, open the suggestions panel. Each suggestion shows the Figma variable name, the suggested token, and the current values from both sides. If they match what you expect, confirm it. If not, dismiss it and assign manually.
+
+<Callout variant="note">
+  Suggestions are most useful for direct variable-to-token matches. For multi-mode variables, TokenNexus expects you to choose each mode's source token intentionally.
+</Callout>
 
 ## Manual mapping
 
 For any variable that auto-match missed or got wrong, click the variable row to open its mapping dropdown. The dropdown searches your token files. Type any part of the token path to filter.
 
-<ImagePlaceholder label="Screenshot: Manual mapping dropdown open for a single variable, showing search results" />
+<ImagePlaceholder label="Screenshot: Manual mapping dropdown open for a single variable, showing search results" src="/token-nexus-docs/images/core/map-03-manual-dropdown.png" />
 
 <GuideStep step={1} title="Click the variable row">
   In the mapping panel, click any unmapped variable to expand it. The row opens a token picker below it.
@@ -56,6 +60,39 @@ For any variable that auto-match missed or got wrong, click the variable row to 
 <GuideStep step={3} title="Select and confirm">
   Click the token you want. The variable row updates to show the confirmed mapping. It moves from the unmapped list to the mapped list.
 </GuideStep>
+
+## Multi-mode variables and source-token bindings
+
+When a collection has more than one mode, TokenNexus treats those rows as **mode bindings** instead of a single direct mapping. You bind each mode to a **source token**. If that source token resolves to a primitive token that is also mapped in Figma, TokenNexus preserves the semantic-to-primitive alias link behind the scenes during sync.
+
+- **Unmapped** means no mode binding has been started yet.
+- **Needs modes** means at least one mode is bound, but the row is not fully covered yet.
+- **Mapped** means every required mode has a valid source-token binding.
+
+This is why **Needs modes** is distinct from **Unmapped**: work has started, but the semantic row is not complete yet.
+
+## Filters, search, drift, and status
+
+Long variable lists use a **token filter**, a **search** field, and **badges** on each row and in the **collection** list. On launch, the plugin can also run a quick **drift** check in the background so issues surface before you open Sync.
+
+### Token filter and search
+
+Use the **token filter** to narrow the list. Options include **All tokens** (default), **Mapped**, **Unmapped**, **Needs modes**, **Stale**, and **Drift**. You can combine filter intent with the search box to find a specific name or value. If you try to turn off your last active filter, the plugin keeps **All tokens** selected so the list never ends up empty by accident.
+
+### Stale vs drift
+
+- **Stale** – The mapping still points at a token path that **no longer exists** in the token files you have loaded (rename, delete, or moved in the repo). Open the variable’s mapping dropdown and pick the correct token path.
+- **Drift** – The mapping is still valid, but the **current value in Figma** does not match what the mapped token implies (for example after a **manual edit** in the Variables panel, or a value change you have not synced yet). Use [Run a Sync](/token-nexus-docs/core/run-a-sync) to review and apply updates, or filter by **Drift** to find those rows quickly.
+
+### Status legend
+
+Row and collection labels can show several **status** indicators. Open the **legend** from the info control next to the filter area to see what each badge means in the current build of the plugin.
+
+### Active collections
+
+Use the **gear** control in the collection sidebar to decide which collections stay active. Active scope affects the whole workspace: **mapping**, **auto-map**, **review**, **save**, and **sync** all operate only on checked collections until you change that selection again.
+
+If a collection card shows a small pulsing yellow dot, some rows in that collection need attention even if the overall mapping percentage still looks high.
 
 ## Saving
 

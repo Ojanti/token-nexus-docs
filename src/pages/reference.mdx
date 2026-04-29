@@ -1,7 +1,7 @@
 ---
 layout: ../layouts/DocsLayout.astro
 title: Reference
-description: Technical reference for token formats, value type compatibility, and privacy policy.
+description: Technical reference for token formats, value type compatibility, privacy, and source-loading behavior.
 ---
 
 import Callout from '../components/Callout.astro';
@@ -10,7 +10,7 @@ import ImagePlaceholder from '../components/ImagePlaceholder.astro';
 
 # Reference
 
-Quick links: [Token Formats](#token-formats) · [Value Type Compatibility](#value-type-compatibility) · [Privacy & Security](#privacy--security)
+Quick links: [Token Formats](#token-formats) · [Value Type Compatibility](#value-type-compatibility) · [Privacy & Security](#privacy--security) · [Loaded source vs saved settings](#loaded-source-vs-saved-settings)
 
 ---
 
@@ -103,8 +103,6 @@ DTCG and Tokens Studio support token references using curly brace syntax. TokenN
 
 Figma variables have four types: color, number (float), string, and boolean. This table shows how design token types map to them.
 
-<ImagePlaceholder label="Screenshot: TypeBadge examples in the mapping panel showing all four types" ratio="4/1" />
-
 | Token `$type` | Figma Variable Type | Compatible | Notes |
 |---|---|---|---|
 | `color` | Color | Yes | Hex, RGB, HSL, and `oklch()` supported |
@@ -139,4 +137,17 @@ Passed through exactly as they appear in the token file. No transformation.
 
 ## Privacy & Security
 
-Read the full [TokenNexus Privacy Policy](https://ojanti.github.io/tokennexus-plugin/privacy-policy.html).
+**Telemetry** is **off by default**. You can opt in or out in the plugin **Settings**; when enabled, only privacy-safe usage and error events are sent (no token contents, variable names, or PAT). Details are in the policy below.
+
+Read the full [TokenNexus Privacy Policy](https://ojanti.github.io/tokennexus-plugin/privacy-policy.html). If that page ever 404s after a deploy, use the same link from the plugin's Settings screen, which always targets the current policy URL.
+
+---
+
+## Loaded source vs saved settings
+
+TokenNexus keeps a distinction between the **saved GitHub connection** and the **currently loaded token session**.
+
+- **Saved settings** decide which repo, branch, and folder path the next fetch should use.
+- **Loaded token session** is the last token set that was successfully loaded into the mapping workspace.
+
+This means saving new settings does **not** immediately replace the mappings and diffs you are looking at. The workspace switches only after an explicit action such as **Rescan source**, **Fetch GitHub updates**, **reloading token files**, or **Generate Variables** from the new source.

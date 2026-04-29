@@ -7,12 +7,28 @@ interface Props {
 }
 
 const { label, caption, src, poster } = Astro.props;
+
+const withBase = (value?: string) => {
+  if (!value) {
+    return undefined;
+  }
+  if (/^(https?:)?\/\//.test(value) || value.startsWith('data:')) {
+    return value;
+  }
+
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  const normalizedValue = value.replace(/^\/token-nexus-docs/, '').replace(/^\/+/, '/');
+  return `${base}${normalizedValue}`;
+};
+
+const resolvedSrc = withBase(src);
+const resolvedPoster = withBase(poster);
 ---
 
 <div class="doc-video-wrap">
-  {src ? (
-    <video class="doc-video" controls preload="metadata" poster={poster} aria-label={label}>
-      <source src={src} />
+  {resolvedSrc ? (
+    <video class="doc-video" controls preload="metadata" poster={resolvedPoster} aria-label={label}>
+      <source src={resolvedSrc} />
     </video>
   ) : (
     <div class="video-placeholder">

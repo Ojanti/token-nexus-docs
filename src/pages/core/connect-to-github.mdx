@@ -23,7 +23,7 @@ A Personal Access Token (PAT) is how TokenNexus authenticates with GitHub on you
 4. Under Repository access, select the specific repository containing your token files
 5. Under Permissions, set Contents to Read-only. That is the only permission TokenNexus needs.
 
-<ImagePlaceholder label="Screenshot: GitHub PAT creation screen with Contents permission set to Read-only" />
+<ImagePlaceholder label="Screenshot: GitHub PAT creation screen with Contents permission set to Read-only" src="/token-nexus-docs/images/core/connect-01-pat-permissions.png" />
 
 <Callout variant="warning">
   Save your PAT immediately after generating it. GitHub shows it only once. If you lose it, you will need to generate a new one. TokenNexus stores the PAT in Figma's local plugin storage - it is not visible to other editors in the file and is never sent anywhere except the GitHub API.
@@ -36,7 +36,7 @@ If your organization uses classic tokens instead of fine-grained, select the `re
 <GuideStep step={1} title="Open TokenNexus in your Figma file">
   Go to Plugins - TokenNexus. On a fresh install, the plugin opens on the setup wizard. If the plugin has been configured before in this file, it opens on the main mapping panel. To reconfigure, go to Settings.
 
-  <ImagePlaceholder label="Screenshot: TokenNexus plugin open on the setup wizard step 1" />
+  <ImagePlaceholder label="Screenshot: TokenNexus plugin open on the setup wizard step 1" src="/token-nexus-docs/images/core/connect-02-setup-wizard.png" />
 </GuideStep>
 
 <GuideStep step={2} title="Enter your repository">
@@ -58,7 +58,7 @@ If your organization uses classic tokens instead of fine-grained, select the `re
 <GuideStep step={6} title="Click Connect and verify">
   Click Connect. TokenNexus makes a test request to GitHub using your credentials. If the connection succeeds, you move to the file selection step. If it fails, the error message will tell you whether the problem is authentication, the repository path, or the branch name.
 
-  <ImagePlaceholder label="Screenshot: Successful connection confirmation screen" />
+  <ImagePlaceholder label="Screenshot: Successful connection confirmation screen" src="/token-nexus-docs/images/core/connect-03-success.png" />
 </GuideStep>
 
 ## Step 3 - Select your token files
@@ -68,7 +68,7 @@ After a successful connection, TokenNexus lists every JSON file it found in the 
 <GuideStep step={1} title="Review the file list">
   Each file shows its path relative to the folder you specified. Files are grouped by subdirectory if your tokens are organized that way.
 
-  <ImagePlaceholder label="Screenshot: File selection screen listing 4 JSON files with checkboxes" />
+  <ImagePlaceholder label="Screenshot: File selection screen listing 4 JSON files with checkboxes" src="/token-nexus-docs/images/quickstart/03-file-selection.png" />
 </GuideStep>
 
 <GuideStep step={2} title="Select token source files" tip="If you use Style Dictionary and have separate source and output files in the same folder, only select the source files - typically the ones with names like color.json, typography.json, or primitive.json.">
@@ -78,5 +78,9 @@ After a successful connection, TokenNexus lists every JSON file it found in the 
 <GuideStep step={3} title="Click Continue">
   The plugin loads your selected files and moves you to the main mapping panel. From here, you are ready to start mapping.
 </GuideStep>
+
+<Callout variant="note">
+  Saving new connection details later in **Settings** does not instantly replace the token session already loaded in the mapping workspace. TokenNexus keeps showing the last successful token load until you explicitly rescan, fetch GitHub updates, reload files, or run Generate Variables from the new source.
+</Callout>
 
 <PluginBanner variant="compact" />

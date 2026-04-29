@@ -19,17 +19,21 @@ A sync is how token changes in your repository reach your Figma file. It is a de
 
 ## Trigger a sync
 
-In the main mapping panel, click the Sync button in the top navigation bar. TokenNexus fetches your selected token files from GitHub, resolves all references and aliases, and compares the resulting values against your mapped variables.
+In the main mapping panel, click the Sync button in the top navigation bar. Then click **Fetch GitHub updates**. TokenNexus fetches your selected token files from GitHub, resolves all references and aliases, and compares the resulting values against your mapped variables.
 
 The fetch uses the branch you configured during setup. If you want to sync from a different branch, update the branch setting first.
 
-<ImagePlaceholder label="Screenshot: Sync button in the top navigation bar with a loading state" />
+<Callout variant="note">
+  Saving new GitHub settings does not instantly switch the sync workspace to that repo. Until you fetch again, Sync continues to show the last successfully loaded token session so you do not lose context mid-session.
+</Callout>
+
+<ImagePlaceholder label="Screenshot: Sync button in the top navigation bar with a loading state" src="/token-nexus-docs/images/core/sync-01-button.png" />
 
 ## Read the diff
 
 After fetching, TokenNexus opens the diff modal. Each row represents a mapped variable whose token value has changed since the last sync.
 
-<ImagePlaceholder label="Screenshot: Sync diff modal with 5 rows - showing variable name, token path, before value, after value, and type badge" ratio="16/9" />
+<ImagePlaceholder label="Screenshot: Sync diff modal with 5 rows - showing variable name, token path, before value, after value, and type badge" src="/token-nexus-docs/images/core/sync-02-diff-modal.png" ratio="16/9" />
 
 Each diff row shows:
 
@@ -48,6 +52,8 @@ Three kinds of rows appear in the diff:
 - **Warning**: The mapping exists but the token no longer exists in the file, or the value type changed in a way that cannot be applied. Review these carefully.
 - If the diff is empty, all your mapped variables already match their source tokens. There is nothing to apply.
 
+Only **active collections** are included in the diff list. If a collection is outside your current active scope, its mapped variables are hidden from this sync until you reactivate that collection in the sidebar scope picker.
+
 <Callout variant="tip">
   The diff modal has a search field. Filter by variable name, token path, or mode label to find specific rows quickly - useful on large files with hundreds of changes.
 </Callout>
@@ -60,7 +66,7 @@ All rows are selected by default. Deselect any rows you want to skip. Rows you d
   Deselecting a row does not dismiss it permanently. If you want to stop a variable from appearing in future diffs, you need to update the mapping or remove it.
 </Callout>
 
-<ImagePlaceholder label="Screenshot: Diff modal with two rows deselected, apply button showing the count of changes to be applied" />
+<ImagePlaceholder label="Screenshot: Diff modal with two rows deselected, apply button showing the count of changes to be applied" src="/token-nexus-docs/images/core/sync-03-deselected.png" />
 
 ## Apply changes
 
